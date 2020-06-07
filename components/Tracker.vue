@@ -4,13 +4,19 @@
     <div id="container">
       <video
         id="camera"
+        ref="camera"
         width="400"
         height="300"
         loop
         playsinline
         autoplay
       ></video>
-      <canvas id="cameraOverlay" width="400" height="300"></canvas>
+      <canvas
+        ref="cameraOverlay"
+        id="cameraOverlay"
+        width="400"
+        height="300"
+      ></canvas>
     </div>
   </div>
 </template>
@@ -63,8 +69,8 @@ export default {
     };
   },
   async mounted() {
-    this.vid = document.getElementById("camera");
-    this.overlay = document.getElementById("cameraOverlay");
+    this.vid = this.$refs.camera;
+    this.overlay = this.$refs.cameraOverlay;
     this.overlayCC = this.overlay.getContext("2d");
     this.vidWidth = this.vid.width;
     this.vidHeight = this.vid.height;

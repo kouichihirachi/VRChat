@@ -2,15 +2,6 @@
   <div class="container">
     <tracker ref="Tracker" @axis="axis"></tracker>
     <vrm ref="Vrm"></vrm>
-    <br />
-    <video
-      id="preview"
-      width="400"
-      height="300"
-      loop
-      playsinline
-      autoplay
-    ></video>
     <button @click="startTracking">Start Tracking</button>
   </div>
 </template>
@@ -24,12 +15,7 @@ export default {
     Tracker,
     Vrm
   },
-  mounted() {
-    let canvas = this.$refs.Vrm.$refs.model;
-    let video = document.getElementById("preview");
-    let stream = canvas.captureStream(30);
-    video.srcObject = stream;
-  },
+  mounted() {},
   methods: {
     startTracking() {
       this.$refs.Tracker.startTracking();

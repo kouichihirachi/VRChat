@@ -1,9 +1,11 @@
 <template>
   <div id="Vrm">
     <!-- 3Dモデル表示 -->
-    <canvas id="model" ref="model" width="400" height="300" hidden></canvas>
+    <canvas ref="model" width="400" height="300"></canvas>
+    <h1>{{ status }}</h1>
   </div>
 </template>
+
 <script>
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
@@ -13,13 +15,15 @@ export default {
   name: "Vrm",
   data() {
     let renderer, camera, currentVrm, scene, clock;
+    let status = "Now Loading...";
     return {
       renderer,
       camera,
       currentVrm,
       scene,
       clock,
-      currentVrm
+      currentVrm,
+      status
     };
   },
   mounted() {
@@ -32,7 +36,7 @@ export default {
   methods: {
     CreateRenderer() {
       // レンダラー
-      const $canvas = document.getElementById("model");
+      const $canvas = this.$refs.model;
       this.renderer = new THREE.WebGLRenderer({
         antialias: true,
         alpha: true,
@@ -67,6 +71,7 @@ export default {
       loader.crossOrigin = "anonymous";
       loader.load(modelSrc, gltf => {
         VRM.from(gltf).then(vrm => {
+          this.status = "";
           VRMUtils.removeUnnecessaryJoints(gltf.scene);
           if (this.scene != null) {
             this.scene.add(vrm.scene);
