@@ -46,7 +46,17 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    noParse: /build\/clmtrackr/,
+    extend: ({ module, output }) => {
+      // rulesの先頭に追加
+      module.rules.unshift({
+        test: /\.worker\.js$/,
+        loader: 'worker-loader'
+      })
+
+      // HMR時にWebWorkerでwindow is not definedになる問題対策
+      output.globalObject = 'this'
+
     }
   }
 }

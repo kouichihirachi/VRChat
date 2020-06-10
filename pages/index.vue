@@ -2,6 +2,7 @@
   <div class="container">
     <tracker ref="Tracker" @axis="axis"></tracker>
     <vrm ref="Vrm"></vrm>
+    <br />
     <button @click="startTracking">Start Tracking</button>
   </div>
 </template>

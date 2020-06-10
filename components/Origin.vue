@@ -17,6 +17,9 @@
         width="400"
         height="300"
       ></canvas>
+      <!-- 3Dモデル表示 -->
+      <canvas ref="model" width="400" height="300"></canvas>
+      <h1>{{ status }}</h1>
     </div>
   </div>
 </template>
@@ -46,14 +49,22 @@
 </style>
 <script>
 import clm from "clmtrackr";
+import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { VRM, VRMUtils, VRMSchema } from "@pixiv/three-vrm";
 
 const ctrack = new clm.tracker({
+  faceDetection: {
+    useWebWorkers: false
+  }
 });
 
 export default {
   name: "Tracker",
   data() {
     let render, tracker, vid, overlay, overlayCC, vidWidth, vidHeight, stack;
+    let renderer, camera, currentVrm, scene, clock;
+    let status = "Now Loading...";
     return {
       render,
       tracker,
@@ -62,7 +73,14 @@ export default {
       overlayCC,
       vidWidth,
       vidHeight,
-      stack
+      stack,
+      renderer,
+      camera,
+      currentVrm,
+      scene,
+      clock,
+      currentVrm,
+      status
     };
   },
   async mounted() {
@@ -79,11 +97,15 @@ export default {
     this.vid.srcObject = stream;
     await this.vid.play();
     ctrack.init();
+    this.clock = new THREE.Clock();
+    this.CreateRenderer();
+    this.CreateCamera();
+    this.CreateScene();
+    this.LoadModels();
   },
   methods: {
     drawLoop() {
       requestAnimationFrame(this.drawLoop);
-
       this.overlayCC.clearRect(0, 0, this.vidWidth, this.vidHeight);
       if (ctrack.getCurrentPosition()) {
         let event = ctrack.getCurrentPosition();
@@ -91,7 +113,7 @@ export default {
         axis = this.maximumLimiter(axis);
         axis = this.limiter(axis);
         axis = this.getMovingAverage(axis);
-        //this.$emit("axis", axis);
+        this.RenderVrm(axis);
         ctrack.draw(this.overlay);
       }
     },
@@ -148,7 +170,7 @@ export default {
       this.prevY = 0;
       this.prevZ = 0;
       let x, y, z;
-      //console.log(Math.abs(axis.x - this.prevX));
+      console.log(Math.abs(axis.x - this.prevX));
       if (
         Math.abs(axis.x - this.prevX) < maxlimit &&
         Math.abs(axis.x - this.prevX) > minlimit
@@ -214,6 +236,79 @@ export default {
       if (axis.y < -limit / 2) axis.y = -limit / 2;
       if (axis.z < -limit) axis.z = -limit;
       return axis;
+    },
+    CreateRenderer() {
+      // レンダラー
+      const $canvas = this.$refs.model;
+      this.renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        canvas: $canvas
+      });
+      this.renderer.setSize(400, 300);
+      this.renderer.setPixelRatio(window.devicePixelRatio);
+    },
+    CreateCamera() {
+      // カメラ
+      this.camera = new THREE.PerspectiveCamera(
+        30.0,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        20.0
+      );
+      this.camera.position.set(0.0, 1.2, 0.8);
+    },
+    CreateScene() {
+      // シーン
+      this.scene = new THREE.Scene();
+      // ライト
+      const color = new THREE.Color("rgb(255, 255, 255)");
+      const light = new THREE.DirectionalLight(color);
+      light.position.set(1.0, 1.0, 1.0).normalize();
+      this.scene.add(light);
+    },
+    LoadModels() {
+      // モデル
+      const modelSrc = "/models/JK.vrm"; // 利用するモデルの配置場所
+      const loader = new GLTFLoader();
+      loader.crossOrigin = "anonymous";
+      loader.load(modelSrc, gltf => {
+        VRM.from(gltf).then(vrm => {
+          this.status = "";
+          VRMUtils.removeUnnecessaryJoints(gltf.scene);
+          if (this.scene != null) {
+            this.scene.add(vrm.scene);
+          }
+          this.currentVrm = vrm;
+          vrm.scene.rotation.y = Math.PI;
+          this.renderer.render(this.scene, this.camera);
+        });
+      });
+    },
+    RenderVrm(axis) {
+      // 基本的にはこの関数内を変えれば良い
+      const deltaTime = this.clock.getDelta();
+      // TODO
+      /*
+      表情のトラッキング
+      瞬きの実装(自然な周期で)
+      手の初分(挙手出来るようにするとか)
+    */
+      if (this.currentVrm) {
+        // ボーンをセット
+        this.currentVrm.humanoid.getBoneNode(
+          VRMSchema.HumanoidBoneName.Neck
+        ).rotation.x = axis.x;
+        this.currentVrm.humanoid.getBoneNode(
+          VRMSchema.HumanoidBoneName.Neck
+        ).rotation.y = axis.y;
+        this.currentVrm.humanoid.getBoneNode(
+          VRMSchema.HumanoidBoneName.Neck
+        ).rotation.z = axis.z;
+        // VRMモデルを更新
+        this.currentVrm.update(deltaTime);
+      }
+      this.renderer.render(this.scene, this.camera);
     }
   }
 };

@@ -81,6 +81,7 @@ export default {
           this.renderer.render(this.scene, this.camera);
         });
       });
+      this.renderer.render(this.scene, this.camera);
     },
     RenderVrm(axis) {
       // 基本的にはこの関数内を変えれば良い
