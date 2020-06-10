@@ -91,7 +91,7 @@ export default {
         axis = this.maximumLimiter(axis);
         axis = this.limiter(axis);
         axis = this.getMovingAverage(axis);
-        //this.$emit("axis", axis);
+        this.$emit("axis", axis);
         ctrack.draw(this.overlay);
       }
     },
