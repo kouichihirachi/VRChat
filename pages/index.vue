@@ -1,20 +1,31 @@
 <template>
   <div class="container">
-    <tracker ref="Tracker" @axis="axis"></tracker>
-    <vrm ref="Vrm"></vrm>
-    <br />
-    <button @click="startTracking">Start Tracking</button>
+    <div class="row">
+      <div class="col">
+        <tracker ref="Tracker" @axis="axis"></tracker>
+      </div>
+      <div class="col">
+        <vrm ref="Vrm"></vrm>
+        <vrm ref="RemoteVrm"></vrm>
+      </div>
+    </div>
+    <div class="row">
+      <WebRTC ref="WebRTC" @renderRemote="renderRemote" />
+    </div>
+    <button @click="startTracking" class="btn btn-success">Start Tracking</button>
   </div>
 </template>
 
 <script>
 import Tracker from "~/components/Tracker.vue";
 import Vrm from "~/components/Vrm.vue";
+import WebRTC from "~/components/WebRTC.vue";
 
 export default {
   components: {
     Tracker,
-    Vrm
+    Vrm,
+    WebRTC
   },
   mounted() {},
   methods: {
@@ -23,18 +34,11 @@ export default {
     },
     axis(axis) {
       this.$refs.Vrm.RenderVrm(axis);
+      this.$refs.WebRTC.send(axis);
+    },
+    renderRemote(axis) {
+      this.$refs.RemoteVrm.RenderVrm(axis);
     }
   }
 };
 </script>
-
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-</style>

@@ -2,21 +2,8 @@
   <div id="Tracker">
     <!-- カメラ表示 -->
     <div id="container">
-      <video
-        id="camera"
-        ref="camera"
-        width="400"
-        height="300"
-        loop
-        playsinline
-        autoplay
-      ></video>
-      <canvas
-        ref="cameraOverlay"
-        id="cameraOverlay"
-        width="400"
-        height="300"
-      ></canvas>
+      <video id="camera" ref="camera" width="400" height="300" loop playsinline autoplay></video>
+      <canvas ref="cameraOverlay" id="cameraOverlay" width="400" height="300"></canvas>
     </div>
   </div>
 </template>
@@ -48,6 +35,9 @@
 import clm from "clmtrackr";
 
 const ctrack = new clm.tracker({
+  faceDetection: {
+    useWebWorkers: false
+  }
 });
 
 export default {
