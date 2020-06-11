@@ -39,7 +39,7 @@ export default {
         return;
       }
       this.room = this.peer.joinRoom(this.roomName, {
-        mode: "mesh",
+        mode: "sfu",
         stream: this.localStream
       });
       this.room.on("open", () => {
