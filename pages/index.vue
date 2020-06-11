@@ -5,14 +5,15 @@
         <tracker ref="Tracker" @axis="axis"></tracker>
       </div>
       <div class="col">
-        <vrm ref="Vrm"></vrm>
-        <vrm ref="RemoteVrm"></vrm>
+        <vrm ref="Vrm" @getStream="getStream" />
       </div>
     </div>
     <div class="row">
-      <WebRTC ref="WebRTC" @renderRemote="renderRemote" />
+      <WebRTC ref="WebRTC" :localStream="localStream" />
     </div>
-    <button @click="startTracking" class="btn btn-success">Start Tracking</button>
+    <div class="row">
+      <button @click="startTracking" class="btn btn-success">Start Tracking</button>
+    </div>
   </div>
 </template>
 
@@ -27,17 +28,21 @@ export default {
     Vrm,
     WebRTC
   },
+  data() {
+    return {
+      localStream: ""
+    };
+  },
   mounted() {},
   methods: {
+    getStream(stream) {
+      this.localStream = stream;
+    },
     startTracking() {
       this.$refs.Tracker.startTracking();
     },
     axis(axis) {
       this.$refs.Vrm.RenderVrm(axis);
-      this.$refs.WebRTC.send(axis);
-    },
-    renderRemote(axis) {
-      this.$refs.RemoteVrm.RenderVrm(axis);
     }
   }
 };

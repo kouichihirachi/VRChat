@@ -32,6 +32,9 @@ export default {
     this.CreateCamera();
     this.CreateScene();
     this.LoadModels();
+    const canvas = this.$refs.model;
+    const stream = canvas.captureStream(25);
+    this.$emit("getStream", stream);
   },
   methods: {
     CreateRenderer() {
