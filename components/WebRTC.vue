@@ -10,7 +10,7 @@
         <button @click="close" class="btn btn-info mb-2 mx-1">閉じる</button>
       </div>
     </div>
-    <p>{{messages}}</p>
+    <p style="white-space: pre-wrap;">{{messages}}</p>
   </div>
 </template>
 <script>
@@ -53,18 +53,24 @@ export default {
         this.messages += `=== ${peerId} joined ===\n`;
       });
       this.room.on("stream", async stream => {
-        this.messages += "New Stream\n";
-        const newVideo = document.createElement("video");
-        newVideo.srcObject = stream;
-        newVideo.playsInline = true;
-        newVideo.setAttribute("data-peer-id", stream.peerId);
-        this.$refs.remoteStream.append(newVideo);
-        await newVideo.play().catch(console.error);
+        if (!this.connectedPeers.includes(stream.peerId)) {
+          this.connectedPeers.push(stream.peerId);
+          this.messages += "New Stream\n";
+          const newVideo = document.createElement("video");
+          newVideo.width = 400;
+          newVideo.height = 300;
+          newVideo.srcObject = stream;
+          newVideo.playsInline = true;
+          newVideo.setAttribute("data-peer-id", stream.peerId);
+          this.$refs.remoteStream.append(newVideo);
+          await newVideo.play().catch(console.error);
+        }
       });
       this.room.on("peerLeave", peerId => {
         const remoteVideo = this.$refs.remoteStream.querySelector(
           "[data-peer-id=${peerId}]"
         );
+        this.connectedPeers = connectedPeers.filter(id => id !== peerId);
         remoteVideo.srcObject.getTracks().forEach(track => track.stop());
         remoteVideo.srcObject = null;
         remoteVideo.remove();
@@ -79,6 +85,7 @@ export default {
         remoteVideo.srcObject = null;
         remoteVideo.remove();
       });
+      this.messages += "Closed\n";
     }
   }
 };

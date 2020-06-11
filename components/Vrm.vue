@@ -42,11 +42,11 @@ export default {
       const $canvas = this.$refs.model;
       this.renderer = new THREE.WebGLRenderer({
         antialias: true,
-        alpha: true,
         canvas: $canvas
       });
       this.renderer.setSize(400, 300);
       this.renderer.setPixelRatio(window.devicePixelRatio);
+      this.renderer.setClearColor(0xffebcd);
     },
     CreateCamera() {
       // カメラ
