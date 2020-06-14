@@ -33,7 +33,7 @@ export default {
     this.CreateScene();
     this.LoadModels();
     const canvas = this.$refs.model;
-    const stream = canvas.captureStream(25);
+    const stream = canvas.captureStream();
     this.$emit("getStream", stream);
   },
   methods: {
