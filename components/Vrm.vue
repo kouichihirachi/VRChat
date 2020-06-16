@@ -81,6 +81,18 @@ export default {
           }
           this.currentVrm = vrm;
           vrm.scene.rotation.y = Math.PI;
+          vrm.humanoid.getBoneNode(
+            VRMSchema.HumanoidBoneName.RightUpperArm
+          ).rotation.z = -(Math.PI / 2 - 0.3);
+          vrm.humanoid.getBoneNode(
+            VRMSchema.HumanoidBoneName.LeftUpperArm
+          ).rotation.z = Math.PI / 2 - 0.3;
+          vrm.humanoid.getBoneNode(
+            VRMSchema.HumanoidBoneName.LeftHand
+          ).rotation.z = 0.1;
+          vrm.humanoid.getBoneNode(
+            VRMSchema.HumanoidBoneName.RightHand
+          ).rotation.z = -0.1;
           this.renderer.render(this.scene, this.camera);
         });
       });
@@ -88,11 +100,30 @@ export default {
     },
     RenderVrm(axis) {
       // 基本的にはこの関数内を変えれば良い
+
+      //瞬き
       const deltaTime = this.clock.getDelta();
+      const blinkVal =
+        Math.sin((this.clock.elapsedTime * 1) / 3) ** 1024 +
+        Math.sin((this.clock.elapsedTime * 4) / 7) ** 1024;
+
+      /*
+      this.currentVrm.blendShapeProxy.setValue(
+        VRMSchema.BlendShapePresetName.Blink,
+        
+      );
+      */
+      console.log(axis.volume);
+      if (this.currentVrm) {
+        this.currentVrm.blendShapeProxy.setValue(
+          VRMSchema.BlendShapePresetName.A,
+          axis.volume
+        );
+      }
+
       // TODO
       /*
       表情のトラッキング
-      瞬きの実装(自然な周期で)
       手の初分(挙手出来るようにするとか)
     */
       if (this.currentVrm) {
