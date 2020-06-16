@@ -33,6 +33,7 @@
 </style>
 <script>
 import clm from "clmtrackr";
+import Stats from "stats.js";
 
 const ctrack = new clm.tracker({
   faceDetection: {
@@ -90,6 +91,18 @@ export default {
     this.vid.srcObject = stream;
     await this.vid.play();
     ctrack.init();
+
+    //fpsモニタリング用
+    const stats = new Stats();
+    document.body.appendChild(stats.domElement);
+    // update stats on every iteration
+    document.addEventListener(
+      "clmtrackrIteration",
+      function(event) {
+        stats.update();
+      },
+      false
+    );
   },
   methods: {
     getFrequency() {
