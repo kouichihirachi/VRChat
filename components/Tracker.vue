@@ -43,7 +43,16 @@ const ctrack = new clm.tracker({
 export default {
   name: "Tracker",
   data() {
-    let render, tracker, vid, overlay, overlayCC, vidWidth, vidHeight, stack;
+    let render,
+      tracker,
+      vid,
+      overlay,
+      overlayCC,
+      vidWidth,
+      vidHeight,
+      stack,
+      analyser,
+      frequencies;
     return {
       render,
       tracker,
@@ -52,7 +61,9 @@ export default {
       overlayCC,
       vidWidth,
       vidHeight,
-      stack
+      stack,
+      analyser,
+      frequencies
     };
   },
   async mounted() {
@@ -61,19 +72,40 @@ export default {
     this.overlayCC = this.overlay.getContext("2d");
     this.vidWidth = this.vid.width;
     this.vidHeight = this.vid.height;
+
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    var context = new AudioContext();
+    this.analyser = context.createAnalyser();
+    this.frequencies = new Uint8Array(this.analyser.frequencyBinCount);
+
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true
     });
+
+    window.hackForMozzila = stream;
+    context.createMediaStreamSource(stream).connect(this.analyser);
+
     this.vid.muted = true;
     this.vid.srcObject = stream;
     await this.vid.play();
     ctrack.init();
   },
   methods: {
+    getFrequency() {
+      //周波数ごとの振幅を取得して配列に格納
+      this.analyser.getByteFrequencyData(this.frequencies);
+      return (
+        this.frequencies.reduce(function(previous, current) {
+          return previous + current;
+        }) / this.analyser.frequencyBinCount
+      );
+    },
     drawLoop() {
       requestAnimationFrame(this.drawLoop);
-
+      let volume = Math.floor(this.getFrequency());
+      const threshold = 10; //閾値以上の音を拾う
+      volume = (volume - threshold) / (100 - threshold);
       this.overlayCC.clearRect(0, 0, this.vidWidth, this.vidHeight);
       if (ctrack.getCurrentPosition()) {
         let event = ctrack.getCurrentPosition();
@@ -81,6 +113,7 @@ export default {
         axis = this.maximumLimiter(axis);
         axis = this.limiter(axis);
         axis = this.getMovingAverage(axis);
+        axis.volume = volume;
         this.$emit("axis", axis);
         ctrack.draw(this.overlay);
       }
