@@ -107,14 +107,12 @@ export default {
         Math.sin((this.clock.elapsedTime * 1) / 3) ** 1024 +
         Math.sin((this.clock.elapsedTime * 4) / 7) ** 1024;
 
-      /*
-      this.currentVrm.blendShapeProxy.setValue(
-        VRMSchema.BlendShapePresetName.Blink,
-        
-      );
-      */
-      console.log(axis.volume);
+      //console.log(axis.volume);
       if (this.currentVrm) {
+        this.currentVrm.blendShapeProxy.setValue(
+          VRMSchema.BlendShapePresetName.Blink,
+          blinkVal
+        );
         this.currentVrm.blendShapeProxy.setValue(
           VRMSchema.BlendShapePresetName.A,
           axis.volume
