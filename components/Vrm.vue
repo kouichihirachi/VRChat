@@ -69,7 +69,7 @@ export default {
     },
     LoadModels() {
       // モデル
-      const modelSrc = "/models/JK.vrm"; // 利用するモデルの配置場所
+      const modelSrc = "/models/sabaru.vrm"; // 利用するモデルの配置場所
       const loader = new GLTFLoader();
       loader.crossOrigin = "anonymous";
       loader.load(modelSrc, gltf => {

@@ -14,6 +14,12 @@
     <div class="row">
       <button @click="startTracking" class="btn btn-success">Start Tracking</button>
     </div>
+    <div class="row">
+      <ul>
+        <li>目をぱちぱちすると戻るよ</li>
+        <li>マスクはしないでね</li>
+      </ul>
+    </div>
   </div>
 </template>
 
