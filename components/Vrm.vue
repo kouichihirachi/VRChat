@@ -9,6 +9,8 @@
 <script>
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
 import { VRM, VRMUtils, VRMSchema } from "@pixiv/three-vrm";
 
 export default {
@@ -57,6 +59,10 @@ export default {
         20.0
       );
       this.camera.position.set(0.0, 1.2, 0.8);
+      const controls = new OrbitControls(this.camera, this.$refs.model);
+      controls.screenSpacePanning = true;
+      controls.target.set(0.0, 1.0, 0.0);
+      controls.update();
     },
     CreateScene() {
       // シーン
