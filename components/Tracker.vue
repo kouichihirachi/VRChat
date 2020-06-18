@@ -4,6 +4,7 @@
     <div id="container">
       <video id="camera" ref="camera" width="400" height="300" loop playsinline autoplay></video>
       <canvas ref="cameraOverlay" id="cameraOverlay" width="400" height="300"></canvas>
+      {{volume}}
     </div>
   </div>
 </template>
@@ -53,7 +54,8 @@ export default {
       vidHeight,
       stack,
       analyser,
-      frequencies;
+      frequencies,
+      volume;
     return {
       render,
       tracker,
@@ -64,7 +66,8 @@ export default {
       vidHeight,
       stack,
       analyser,
-      frequencies
+      frequencies,
+      volume
     };
   },
   async mounted() {
@@ -85,7 +88,7 @@ export default {
     });
 
     window.hackForMozzila = stream;
-    context.createMediaStreamSource(stream).connect(this.analyser);
+    await context.createMediaStreamSource(stream).connect(this.analyser);
 
     this.vid.muted = true;
     this.vid.srcObject = stream;
@@ -116,9 +119,9 @@ export default {
     },
     drawLoop() {
       requestAnimationFrame(this.drawLoop);
-      let volume = Math.floor(this.getFrequency());
+      this.volume = Math.floor(this.getFrequency());
       const threshold = 10; //閾値以上の音を拾う
-      volume = volume / (100 - threshold);
+      this.volume = (this.volume - threshold) / (100 - threshold);
       this.overlayCC.clearRect(0, 0, this.vidWidth, this.vidHeight);
       if (ctrack.getCurrentPosition()) {
         let event = ctrack.getCurrentPosition();
@@ -126,7 +129,7 @@ export default {
         axis = this.maximumLimiter(axis);
         axis = this.limiter(axis);
         axis = this.getMovingAverage(axis);
-        axis.volume = volume;
+        axis.volume = this.volume;
         this.$emit("axis", axis);
         ctrack.draw(this.overlay);
       }
@@ -226,7 +229,7 @@ export default {
       this.stack = [];
       let averageAxis = { x: 0, y: 0, z: 0 };
       if (this.stack.length > 10) {
-        this.stack.pop();
+        this.stack.shift();
         this.stack.push(axis);
         for (let i = 0; i < this.stack.length; i++) {
           averageAxis.x += stack[i].x;
