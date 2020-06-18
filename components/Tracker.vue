@@ -77,16 +77,15 @@ export default {
     this.vidWidth = this.vid.width;
     this.vidHeight = this.vid.height;
 
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    var context = new AudioContext();
-    this.analyser = context.createAnalyser();
-    this.frequencies = new Uint8Array(this.analyser.frequencyBinCount);
-
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true
     });
 
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    var context = new AudioContext();
+    this.analyser = context.createAnalyser();
+    this.frequencies = new Uint8Array(this.analyser.frequencyBinCount);
     window.hackForMozzila = stream;
     await context.createMediaStreamSource(stream).connect(this.analyser);
 
