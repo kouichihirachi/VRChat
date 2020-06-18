@@ -118,7 +118,7 @@ export default {
       requestAnimationFrame(this.drawLoop);
       let volume = Math.floor(this.getFrequency());
       const threshold = 10; //閾値以上の音を拾う
-      volume = (volume - threshold) / (100 - threshold);
+      volume = volume / (100 - threshold);
       this.overlayCC.clearRect(0, 0, this.vidWidth, this.vidHeight);
       if (ctrack.getCurrentPosition()) {
         let event = ctrack.getCurrentPosition();
