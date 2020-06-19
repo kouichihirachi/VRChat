@@ -1,10 +1,34 @@
 <template>
   <div id="Vrm">
     <!-- 3Dモデル表示 -->
-    <canvas ref="model" width="400" height="300"></canvas>
-    <h1>{{ status }}</h1>
+    <div class="view">
+      <h5 class="status">{{ status }}</h5>
+      <canvas ref="model" width="400" height="300"></canvas>
+    </div>
+    <div>
+      <label>モデルを選択：</label>
+      <select v-model="modelName" @change="LoadModels(modelName)">
+        <option disabled value>選択してください</option>
+        <option value="JK.vrm">JK</option>
+        <option value="sabaru.vrm">サーバルちゃん</option>
+      </select>
+    </div>
   </div>
 </template>
+
+<style>
+.view {
+  position: relative;
+}
+.view > .status {
+  position: absolute;
+  top: 6em;
+  left: 5em;
+  bottom: 0;
+  text-align: center;
+  margin: auto;
+}
+</style>
 
 <script>
 import * as THREE from "three";
@@ -16,8 +40,7 @@ import { VRM, VRMUtils, VRMSchema } from "@pixiv/three-vrm";
 export default {
   name: "Vrm",
   data() {
-    let renderer, camera, currentVrm, scene, clock;
-    let status = "Now Loading...";
+    let renderer, camera, currentVrm, scene, clock, modelName;
     return {
       renderer,
       camera,
@@ -25,7 +48,8 @@ export default {
       scene,
       clock,
       currentVrm,
-      status
+      status,
+      modelName
     };
   },
   mounted() {
@@ -33,7 +57,8 @@ export default {
     this.CreateRenderer();
     this.CreateCamera();
     this.CreateScene();
-    this.LoadModels();
+    this.status = "モデルを選択してください";
+    this.renderer.render(this.scene, this.camera);
     const canvas = this.$refs.model;
     const stream = canvas.captureStream();
     this.$emit("getStream", stream);
@@ -73,9 +98,14 @@ export default {
       light.position.set(1.0, 1.0, 1.0).normalize();
       this.scene.add(light);
     },
-    LoadModels() {
+    DeleteModel() {
+      this.scene.remove(this.currentVrm.scene);
+    },
+    LoadModels(modelName) {
       // モデル
-      const modelSrc = "/models/sabaru.vrm"; // 利用するモデルの配置場所
+      this.status = "モデル読み込み中...";
+      if (this.currentVrm) this.DeleteModel();
+      const modelSrc = "/models/" + modelName; // 利用するモデルの配置場所
       const loader = new GLTFLoader();
       loader.crossOrigin = "anonymous";
       loader.load(modelSrc, gltf => {
@@ -99,38 +129,35 @@ export default {
           vrm.humanoid.getBoneNode(
             VRMSchema.HumanoidBoneName.RightHand
           ).rotation.z = -0.1;
-          this.renderer.render(this.scene, this.camera);
         });
       });
       this.renderer.render(this.scene, this.camera);
     },
-    RenderVrm(axis) {
-      // 基本的にはこの関数内を変えれば良い
-
+    ChangeVrm(axis) {
       //瞬き
-      const deltaTime = this.clock.getDelta();
-      const blinkVal =
-        Math.sin((this.clock.elapsedTime * 1) / 3) ** 1024 +
-        Math.sin((this.clock.elapsedTime * 4) / 7) ** 1024;
-
-      console.log(axis.volume);
+      console.log(axis);
       if (this.currentVrm) {
+        const blinkVal =
+          Math.sin((this.clock.elapsedTime * 1) / 3) ** 1024 +
+          Math.sin((this.clock.elapsedTime * 4) / 7) ** 1024;
+
         this.currentVrm.blendShapeProxy.setValue(
           VRMSchema.BlendShapePresetName.Blink,
           blinkVal
         );
-        this.currentVrm.blendShapeProxy.setValue(
-          VRMSchema.BlendShapePresetName.A,
-          axis.volume
-        );
       }
-
+      // 基本的にはこの関数内を変えれば良い
       // TODO
       /*
       表情のトラッキング
       手の初分(挙手出来るようにするとか)
     */
-      if (this.currentVrm) {
+      if (this.currentVrm && axis != 0) {
+        const deltaTime = this.clock.getDelta();
+        this.currentVrm.blendShapeProxy.setValue(
+          VRMSchema.BlendShapePresetName.A,
+          axis.volume
+        );
         // ボーンをセット
         this.currentVrm.humanoid.getBoneNode(
           VRMSchema.HumanoidBoneName.Neck
@@ -141,10 +168,12 @@ export default {
         this.currentVrm.humanoid.getBoneNode(
           VRMSchema.HumanoidBoneName.Neck
         ).rotation.z = axis.z;
-        // VRMモデルを更新
         this.currentVrm.update(deltaTime);
       }
-      this.renderer.render(this.scene, this.camera);
+      if (this.renderer) {
+        // VRMモデルを更新
+        this.renderer.render(this.scene, this.camera);
+      }
     }
   }
 };

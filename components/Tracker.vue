@@ -55,7 +55,8 @@ export default {
       stack,
       analyser,
       frequencies,
-      volume;
+      volume,
+      isTracking;
     return {
       render,
       tracker,
@@ -67,7 +68,8 @@ export default {
       stack,
       analyser,
       frequencies,
-      volume
+      volume,
+      isTracking
     };
   },
   async mounted() {
@@ -76,6 +78,8 @@ export default {
     this.overlayCC = this.overlay.getContext("2d");
     this.vidWidth = this.vid.width;
     this.vidHeight = this.vid.height;
+    this.isTracking = false;
+    this.drawLoop();
 
     const stream = await navigator.mediaDevices.getUserMedia({
       video: true,
@@ -118,11 +122,12 @@ export default {
     },
     drawLoop() {
       requestAnimationFrame(this.drawLoop);
-      this.volume = Math.floor(this.getFrequency());
-      const threshold = 10; //閾値以上の音を拾う
-      this.volume = (this.volume - threshold) / (100 - threshold);
       this.overlayCC.clearRect(0, 0, this.vidWidth, this.vidHeight);
       if (ctrack.getCurrentPosition()) {
+        this.volume = Math.floor(this.getFrequency());
+        const threshold = 10; //閾値以上の音を拾う
+        this.volume = (this.volume - threshold) / (100 - threshold);
+
         let event = ctrack.getCurrentPosition();
         let axis = this.mapEventTo3dTransforms(event);
         axis = this.maximumLimiter(axis);
@@ -131,14 +136,24 @@ export default {
         axis.volume = this.volume;
         this.$emit("axis", axis);
         ctrack.draw(this.overlay);
+      } else {
+        this.$emit("axis", 0);
       }
+      return;
     },
     startTracking() {
-      if (this.vid != null) {
-        this.vid.play();
-        ctrack.start(this.vid);
+      if (!this.isTracking) {
+        if (this.vid != null) {
+          this.vid.play();
+          ctrack.start(this.vid);
+        }
+        this.isTracking = true;
       }
-      this.drawLoop();
+    },
+    stopTracking() {
+      if (this.isTracking) {
+        this.isTracking = false;
+      }
     },
     mapEventTo3dTransforms(event) {
       //2次元座標から3次元の傾きを取得

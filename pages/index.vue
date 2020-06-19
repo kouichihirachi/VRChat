@@ -5,7 +5,7 @@
         <tracker ref="Tracker" @axis="axis"></tracker>
       </div>
       <div class="col">
-        <vrm ref="Vrm" @getStream="getStream" />
+        <vrm ref="Vrm" @getStream="getStream" @getTrack="getTrack" />
       </div>
     </div>
     <div class="row">
@@ -13,6 +13,7 @@
     </div>
     <div class="row">
       <button @click="startTracking" class="btn btn-success">Start Tracking</button>
+      <button @click="stopTracking" class="btn btn-success">Stop Tracking</button>
     </div>
     <div class="row">
       <ul>
@@ -47,8 +48,14 @@ export default {
     startTracking() {
       this.$refs.Tracker.startTracking();
     },
+    stopTracking() {
+      this.$refs.Tracker.stopTracking();
+    },
+    getTrack() {
+      this.$refs.Tracker.drawLoop();
+    },
     axis(axis) {
-      this.$refs.Vrm.RenderVrm(axis);
+      this.$refs.Vrm.ChangeVrm(axis);
     }
   }
 };
