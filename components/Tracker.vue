@@ -4,7 +4,7 @@
     <div id="container">
       <video id="camera" ref="camera" width="400" height="300" loop playsinline autoplay></video>
       <canvas ref="cameraOverlay" id="cameraOverlay" width="400" height="300"></canvas>
-      {{volume}}
+      <!-- {{volume}} -->
     </div>
   </div>
 </template>
@@ -123,22 +123,26 @@ export default {
     drawLoop() {
       requestAnimationFrame(this.drawLoop);
       this.overlayCC.clearRect(0, 0, this.vidWidth, this.vidHeight);
-      if (ctrack.getCurrentPosition()) {
+
+      let axis = {};
+      //口の動き
+      if (this.analyser) {
         this.volume = Math.floor(this.getFrequency());
         const threshold = 10; //閾値以上の音を拾う
         this.volume = (this.volume - threshold) / (100 - threshold);
+        axis.volume = this.volume;
+      }
 
+      if (ctrack.getCurrentPosition() && this.isTracking) {
         let event = ctrack.getCurrentPosition();
-        let axis = this.mapEventTo3dTransforms(event);
+        axis = this.mapEventTo3dTransforms(event);
         axis = this.maximumLimiter(axis);
         axis = this.limiter(axis);
         axis = this.getMovingAverage(axis);
-        axis.volume = this.volume;
-        this.$emit("axis", axis);
         ctrack.draw(this.overlay);
-      } else {
-        this.$emit("axis", 0);
       }
+      if (axis === {}) axis = 0;
+      this.$emit("axis", axis);
       return;
     },
     startTracking() {
