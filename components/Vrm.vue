@@ -12,6 +12,7 @@
         <option value="JK.vrm">JK</option>
         <option value="sabaru.vrm">サーバルちゃん</option>
       </select>
+      <button @click="Animate" class="btn btn-success">Animation</button>
     </div>
   </div>
 </template>
@@ -40,7 +41,7 @@ import { VRM, VRMUtils, VRMSchema } from "@pixiv/three-vrm";
 export default {
   name: "Vrm",
   data() {
-    let renderer, camera, currentVrm, scene, clock, modelName;
+    let renderer, camera, currentVrm, scene, clock, modelName, isAnimate, mixer;
     return {
       renderer,
       camera,
@@ -49,7 +50,9 @@ export default {
       clock,
       currentVrm,
       status,
-      modelName
+      modelName,
+      isAnimate,
+      mixer
     };
   },
   mounted() {
@@ -62,6 +65,7 @@ export default {
     const canvas = this.$refs.model;
     const stream = canvas.captureStream();
     this.$emit("getStream", stream);
+    this.isAnimate = false;
   },
   methods: {
     CreateRenderer() {
@@ -129,14 +133,98 @@ export default {
           vrm.humanoid.getBoneNode(
             VRMSchema.HumanoidBoneName.RightHand
           ).rotation.z = -0.1;
+
+          // keyframe animations
+          const bones = [VRMSchema.HumanoidBoneName.Neck].map(boneName => {
+            return vrm.humanoid.getBoneNode(boneName);
+          });
+          console.log(bones);
+          const clip = THREE.AnimationClip.parseAnimation(
+            {
+              hierarchy: [
+                {
+                  keys: [
+                    {
+                      rot: new THREE.Quaternion()
+                        .setFromEuler(new THREE.Euler(Math.Pi / 3, 0, 0))
+                        .toArray(),
+                      time: 0.0
+                    },
+                    {
+                      rot: new THREE.Quaternion()
+                        .setFromEuler(new THREE.Euler(0, Math.Pi / 3, 0))
+                        .toArray(),
+                      time: 4.6
+                    },
+                    {
+                      rot: new THREE.Quaternion()
+                        .setFromEuler(new THREE.Euler(-Math.PI / 16, 0, 0))
+                        .toArray(),
+                      time: 4.8
+                    },
+                    {
+                      rot: new THREE.Quaternion()
+                        .setFromEuler(new THREE.Euler(0, 0, Math.Pi / 3))
+                        .toArray(),
+                      time: 5.0
+                    }
+                  ]
+                }
+              ]
+            },
+            bones
+          );
+          clip.tracks.some(track => {
+            track.name = track.name.replace(
+              /^\.bones\[([^\]]+)\].(position|quaternion|scale)$/,
+              "$1.$2"
+            );
+          });
+          this.mixer = new THREE.AnimationMixer(this.scene);
+          this.mixer.clipAction(clip).play();
         });
       });
       this.renderer.render(this.scene, this.camera);
     },
+    Animate() {
+      /*
+      this.isAnimate = true;
+      let finished = true;
+      if (this.currentVrm) {
+        const deltaTime = this.clock.getDelta();
+        const Animation = [
+          {
+            Bone: this.currentVrm.humanoid.getBoneNode(
+              VRMSchema.HumanoidBoneName.Neck
+            ).rotation.x,
+            Deg: Math.PI / 2
+          }
+        ];
+        for (let i = 0; i < Animation.length; i++) {
+          const target = Animation[i].Deg;
+          const Bone = Animation[i].Bone;
+          const now = Bone;
+          const diff = target - now;
+          console.log(diff);
+          if (diff > 0) {
+            finished = false;
+            Animation[i].Bone = this.clock.elapsedTime * 0.1;
+          }
+        }
+        if (finished) this.isAnimate = false;
+        this.currentVrm.update(deltaTime);
+      }
+      */
+      if (this.mixer) {
+        console.log("Called");
+        const delta = this.clock.getDelta();
+        this.mixer.update(delta);
+      }
+    },
     ChangeVrm(axis) {
       //瞬き
-      console.log(axis);
       if (this.currentVrm) {
+        if (this.isAnimate) this.Animate();
         const blinkVal =
           Math.sin((this.clock.elapsedTime * 1) / 3) ** 1024 +
           Math.sin((this.clock.elapsedTime * 4) / 7) ** 1024;
@@ -158,16 +246,18 @@ export default {
           VRMSchema.BlendShapePresetName.A,
           axis.volume
         );
-        // ボーンをセット
-        this.currentVrm.humanoid.getBoneNode(
-          VRMSchema.HumanoidBoneName.Neck
-        ).rotation.x = axis.x;
-        this.currentVrm.humanoid.getBoneNode(
-          VRMSchema.HumanoidBoneName.Neck
-        ).rotation.y = axis.y;
-        this.currentVrm.humanoid.getBoneNode(
-          VRMSchema.HumanoidBoneName.Neck
-        ).rotation.z = axis.z;
+        if (axis.x && axis.y && axis.z) {
+          // ボーンをセット
+          this.currentVrm.humanoid.getBoneNode(
+            VRMSchema.HumanoidBoneName.Neck
+          ).rotation.x = axis.x;
+          this.currentVrm.humanoid.getBoneNode(
+            VRMSchema.HumanoidBoneName.Neck
+          ).rotation.y = axis.y;
+          this.currentVrm.humanoid.getBoneNode(
+            VRMSchema.HumanoidBoneName.Neck
+          ).rotation.z = axis.z;
+        }
         this.currentVrm.update(deltaTime);
       }
       if (this.renderer) {
