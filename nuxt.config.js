@@ -82,5 +82,5 @@ export default {
 
     }
   },
-  ...routerBase
+  routerBase
 }
