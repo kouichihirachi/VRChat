@@ -31,7 +31,7 @@ export default {
       key: "2cc1c46b-a0e9-47bc-ab5e-65586b72ee58",
       debug: 3
     });
-    this.messages += "Opend\n";
+    this.messages += "サーバーに切断しました\n";
   },
   methods: {
     connect() {
@@ -45,19 +45,18 @@ export default {
         stream: this.localStream
       });
       this.room.on("open", () => {
-        this.messages += "Connected\n";
+        this.messages += "ルームに入室しました\n";
         this.connect(this.room);
       });
       this.room.on("data", data => {
         //データ受信
       });
       this.room.on("peerJoin", peerId => {
-        this.messages += `=== ${peerId} joined ===\n`;
+        this.messages += `${peerId} が入室しました\n`;
       });
       this.room.on("stream", async stream => {
         if (!this.connectedPeers.includes(stream.peerId)) {
           this.connectedPeers.push(stream.peerId);
-          this.messages += "New Stream\n";
           const newVideo = document.createElement("video");
           newVideo.width = 400;
           newVideo.height = 300;
@@ -70,9 +69,9 @@ export default {
       });
       this.room.on("peerLeave", peerId => {
         const remoteVideo = this.$refs.remoteStream.querySelector(
-          "[data-peer-id=${peerId}]"
+          "[data-peer-id=" + peerId + "]"
         );
-        this.connectedPeers = connectedPeers.filter(id => id !== peerId);
+        this.connectedPeers = this.connectedPeers.filter(id => id !== peerId);
         remoteVideo.srcObject.getTracks().forEach(track => track.stop());
         remoteVideo.srcObject = null;
         remoteVideo.remove();
@@ -87,7 +86,8 @@ export default {
         remoteVideo.srcObject = null;
         remoteVideo.remove();
       });
-      this.messages += "Closed\n";
+      this.room.close();
+      this.messages += "退室しました\n";
     }
   }
 };
