@@ -12,8 +12,8 @@
       <WebRTC ref="WebRTC" :localStream="localStream" />
     </div>
     <div class="row">
-      <button @click="startTracking" class="btn btn-success">Start Tracking</button>
-      <button @click="stopTracking" class="btn btn-success">Stop Tracking</button>
+      <button @click="startTracking" class="btn btn-success mr-1">トラッキング開始</button>
+      <button @click="stopTracking" class="btn btn-success mr-1">トラッキング停止</button>
     </div>
     <div class="row">
       <ul>
