@@ -2,14 +2,14 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <tracker ref="Tracker" @axis="axis"></tracker>
+        <tracker ref="Tracker" @axis="axis" @getAudioTrack="getAudioTrack"></tracker>
       </div>
       <div class="col">
         <vrm ref="Vrm" @getStream="getStream" @getTrack="getTrack" />
       </div>
     </div>
     <div class="row">
-      <WebRTC ref="WebRTC" :localStream="localStream" />
+      <WebRTC ref="WebRTC" :localStream="localStream" :audioTrack="audioTrack" />
     </div>
     <div class="row">
       <button @click="startTracking" class="btn btn-success mr-1">トラッキング開始</button>
@@ -37,13 +37,17 @@ export default {
   },
   data() {
     return {
-      localStream: ""
+      localStream: "",
+      audioTrack: ""
     };
   },
   mounted() {},
   methods: {
     getStream(stream) {
       this.localStream = stream;
+    },
+    getAudioTrack(track) {
+      this.audioTrack = track;
     },
     startTracking() {
       this.$refs.Tracker.startTracking();

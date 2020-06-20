@@ -92,6 +92,7 @@ export default {
     this.frequencies = new Uint8Array(this.analyser.frequencyBinCount);
     window.hackForMozzila = stream;
     await context.createMediaStreamSource(stream).connect(this.analyser);
+    this.$emit("getAudioTrack", stream.getAudioTracks()[0]);
 
     this.vid.muted = true;
     this.vid.srcObject = stream;

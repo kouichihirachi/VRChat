@@ -25,7 +25,7 @@ export default {
       messages: ""
     };
   },
-  props: ["localStream"],
+  props: ["localStream", "audioTrack"],
   mounted() {
     this.peer = new peer({
       key: "2cc1c46b-a0e9-47bc-ab5e-65586b72ee58",
@@ -38,6 +38,8 @@ export default {
       if (!this.roomName) {
         return;
       }
+
+      this.localStream.addTrack(this.audioTrack);
       this.room = this.peer.joinRoom(this.roomName, {
         mode: "sfu",
         stream: this.localStream
