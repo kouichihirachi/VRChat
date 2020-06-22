@@ -8,7 +8,7 @@
         <vrm ref="Vrm" @getStream="getStream" @getTrack="getTrack" />
       </div>
     </div>
-    <div class="row">
+    <div>
       <WebRTC ref="WebRTC" :localStream="localStream" :audioTrack="audioTrack" />
     </div>
     <div class="row">

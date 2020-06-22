@@ -1,6 +1,6 @@
 <template>
-  <div id="webrtc" class="container">
-    <div ref="remoteStream"></div>
+  <div id="webrtc">
+    <div class="row" ref="remoteStream"></div>
     <div class="row">
       <div class="form-inline">
         <div class="form-group mb-2">
@@ -10,7 +10,9 @@
         <button @click="close" class="btn btn-info mb-2 mx-1">閉じる</button>
       </div>
     </div>
-    <p style="white-space: pre-wrap;">{{messages}}</p>
+    <div class="row">
+      <textarea v-model="messages" class="form-control col-6"></textarea>
+    </div>
   </div>
 </template>
 <script>
@@ -38,15 +40,13 @@ export default {
       if (!this.roomName) {
         return;
       }
-
       this.localStream.addTrack(this.audioTrack);
       this.room = this.peer.joinRoom(this.roomName, {
         mode: "sfu",
         stream: this.localStream
       });
       this.room.once("open", () => {
-        this.messages += "ルームに入室しました\n";
-        this.connect(this.room);
+        this.messages += "体育館に入室しました\n";
       });
       this.room.once("data", data => {
         //データ受信
@@ -63,13 +63,15 @@ export default {
           newVideo.srcObject = stream;
           newVideo.playsInline = true;
           newVideo.setAttribute("data-peer-id", stream.peerId);
+          newVideo.className = "col-4";
           this.$refs.remoteStream.append(newVideo);
           await newVideo.play().catch(console.error);
         }
       });
       this.room.on("peerLeave", peerId => {
+        this.messages += `${peerId} が退場しました\n`;
         const remoteVideo = this.$refs.remoteStream.querySelector(
-          "[data-peer-id=" + peerId + "]"
+          "[data-peer-id='" + peerId + "']"
         );
         this.connectedPeers = this.connectedPeers.filter(id => id !== peerId);
         remoteVideo.srcObject.getTracks().forEach(track => track.stop());
@@ -87,7 +89,7 @@ export default {
         remoteVideo.remove();
       });
       this.room.close();
-      this.messages += "退室しました\n";
+      this.messages += "自主退場しました\n";
     }
   }
 };
