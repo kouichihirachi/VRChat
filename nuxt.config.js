@@ -80,7 +80,8 @@ export default {
       // HMR時にWebWorkerでwindow is not definedになる問題対策
       output.globalObject = 'this'
 
-    }
+    },
+    publicPath: '/VRChat/_nuxt/',
   },
   routerBase
 }
