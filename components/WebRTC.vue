@@ -31,7 +31,7 @@ export default {
       key: "2cc1c46b-a0e9-47bc-ab5e-65586b72ee58",
       debug: 3
     });
-    this.messages += "サーバーに切断しました\n";
+    this.messages += "サーバーに接続しました\n";
   },
   methods: {
     connect() {
@@ -44,11 +44,11 @@ export default {
         mode: "sfu",
         stream: this.localStream
       });
-      this.room.on("open", () => {
+      this.room.once("open", () => {
         this.messages += "ルームに入室しました\n";
         this.connect(this.room);
       });
-      this.room.on("data", data => {
+      this.room.once("data", data => {
         //データ受信
       });
       this.room.on("peerJoin", peerId => {
