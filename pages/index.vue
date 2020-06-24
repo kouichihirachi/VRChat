@@ -1,66 +1,18 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <tracker ref="Tracker" @axis="axis" @getAudioTrack="getAudioTrack"></tracker>
-      </div>
-      <div class="col">
-        <vrm ref="Vrm" @getStream="getStream" @getTrack="getTrack" />
-      </div>
+    <div class="text-center">
+      <h1>VOOM</h1>
+      <p class="text-muted">Make Your Confarence More Fun!</p>
     </div>
-    <div>
-      <WebRTC ref="WebRTC" :localStream="localStream" :audioTrack="audioTrack" />
-    </div>
-    <div class="row">
-      <button @click="startTracking" class="btn btn-success mr-1">トラッキング開始</button>
-      <button @click="stopTracking" class="btn btn-success mr-1">トラッキング停止</button>
-    </div>
-    <div class="row">
-      <ul>
-        <li>目をぱちぱちすると戻るよ</li>
-        <li>マスクはしないでね</li>
-      </ul>
+    <div class="jumbotron text-center">
+      <p>
+        VOOMはあなたがバーチャルアバターとなり
+        <br />会議に参加できる新たWeb会議システムです
+      </p>
+      <nuxt-link to="/chat" class="btn btn-lg btn-info">会議を始める</nuxt-link>
     </div>
   </div>
 </template>
-
 <script>
-import Tracker from "~/components/Tracker.vue";
-import Vrm from "~/components/Vrm.vue";
-import WebRTC from "~/components/WebRTC.vue";
-
-export default {
-  components: {
-    Tracker,
-    Vrm,
-    WebRTC
-  },
-  data() {
-    return {
-      localStream: "",
-      audioTrack: ""
-    };
-  },
-  mounted() {},
-  methods: {
-    getStream(stream) {
-      this.localStream = stream;
-    },
-    getAudioTrack(track) {
-      this.audioTrack = track;
-    },
-    startTracking() {
-      this.$refs.Tracker.startTracking();
-    },
-    stopTracking() {
-      this.$refs.Tracker.stopTracking();
-    },
-    getTrack() {
-      this.$refs.Tracker.drawLoop();
-    },
-    axis(axis) {
-      this.$refs.Vrm.ChangeVrm(axis);
-    }
-  }
-};
+export default {};
 </script>
