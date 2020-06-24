@@ -1,18 +1,75 @@
 <template>
-  <div class="container">
-    <div class="text-center">
-      <h1>VOOM</h1>
-      <p class="text-muted">Make Your Confarence More Fun!</p>
-    </div>
-    <div class="jumbotron text-center">
-      <p>
-        VOOMはあなたがバーチャルアバターとなり
-        <br />会議に参加できる新たWeb会議システムです
-      </p>
-      <nuxt-link to="/chat" class="btn btn-lg btn-info">会議を始める</nuxt-link>
+  <div class="container-fluid background">
+    <div class="container">
+      <div class="row">
+        <div
+          class="jumbotron mt-5 pt-3 pb-3 bg-light md-5 mx-auto justify-content-center text-center"
+        >
+          <div class="text-center">
+            <h1>VOOM</h1>
+            <p class="text-muted">Make Your Confarence More Fun!</p>
+          </div>
+          <hr />VOOMはあなたがバーチャルアバターで
+          <br />会議に参加できる新しいWeb会議システム
+          <hr />
+          <div class="form-inline">
+            <div class="mb-2 mx-1">
+              RoomID
+              <input type="text" class="form-control" v-model="roomId" placeholder="RoomID" />
+            </div>
+            <div class="mb-2 mx-1">
+              <nuxt-link :to="{name:'chat',query:{room:roomId}}" class="btn btn-info">会議を開始</nuxt-link>
+            </div>
+          </div>
+          <small>
+            RoomIDは自身で設定することも可能ですが
+            <br />セキュリティ上の観点から推奨しません
+          </small>
+        </div>
+      </div>
     </div>
   </div>
 </template>
+<style>
+.background {
+  position: relative;
+  height: 100vh;
+  min-height: 300px;
+  background-image: url("~assets/img/background.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  z-index: 0;
+  overflow: hidden;
+}
+.background::before {
+  content: "";
+  background: inherit;
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  z-index: -1;
+}
+</style>
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      roomId: "test"
+    };
+  },
+  mounted() {
+    this.roomId = Math.random()
+      .toString(32)
+      .substring(2);
+  }
+};
 </script>
