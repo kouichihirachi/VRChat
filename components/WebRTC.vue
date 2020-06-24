@@ -34,6 +34,9 @@ export default {
       debug: 3
     });
     this.messages += "サーバーに接続しました\n";
+    if (this.$nuxt.$route.query.room) {
+      this.roomName = this.$nuxt.$route.query.room;
+    }
   },
   methods: {
     connect() {
