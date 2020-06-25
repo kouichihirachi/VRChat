@@ -6,10 +6,10 @@
           class="jumbotron mt-5 pt-3 pb-3 bg-light md-5 mx-auto justify-content-center text-center"
         >
           <div class="text-center">
-            <h1>VOOM</h1>
+            <h1>V会議</h1>
             <p class="text-muted">Make Your Confarence More Fun!</p>
           </div>
-          <hr />VOOMはあなたがバーチャルアバターで
+          <hr />V会議はあなたがバーチャルアバターで
           <br />会議に参加できる新しいWeb会議システム
           <hr />
           <div class="form-inline">
