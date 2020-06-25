@@ -6,20 +6,18 @@
           class="jumbotron mt-5 pt-3 pb-3 bg-light md-5 mx-auto justify-content-center text-center"
         >
           <div class="text-center">
-            <h1>Ｖ会議</h1>
+            <h1>V会議</h1>
             <p class="text-muted">Make Your Confarence More Fun!</p>
           </div>
           <hr />V会議はあなたがバーチャルアバターで
           <br />会議に参加できる新しいWeb会議システム
           <hr />
-          <div class="form-inline">
-            <div class="mb-2 mx-1">
-              RoomID
-              <input type="text" class="form-control" v-model="roomId" placeholder="RoomID" />
-            </div>
-            <div class="mb-2 mx-1">
-              <nuxt-link :to="{name:'chat',query:{room:roomId}}" class="btn btn-info">会議を開始</nuxt-link>
-            </div>
+          <div class="form-group mb-2">
+            <label>RoomID</label>
+            <input type="text" class="form-control" v-model="roomId" placeholder="RoomID" />
+          </div>
+          <div class="form-group">
+            <nuxt-link :to="{name:'chat',query:{room:roomId}}" class="btn btn-info">会議を開始</nuxt-link>
           </div>
           <small>
             RoomIDは自身で設定することも可能ですが

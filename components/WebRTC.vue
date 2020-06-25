@@ -72,7 +72,7 @@ export default {
         }
       });
       this.room.on("peerLeave", peerId => {
-        this.messages += `${peerId} が退場しました\n`;
+        this.messages += `${peerId} が退出しました\n`;
         const remoteVideo = this.$refs.remoteStream.querySelector(
           "[data-peer-id='" + peerId + "']"
         );
