@@ -6,7 +6,7 @@
           class="jumbotron mt-5 pt-3 pb-3 bg-light md-5 mx-auto justify-content-center text-center"
         >
           <div class="text-center">
-            <h1>V会議</h1>
+            <h1>Ｖ会議</h1>
             <p class="text-muted">Make Your Confarence More Fun!</p>
           </div>
           <hr />V会議はあなたがバーチャルアバターで
