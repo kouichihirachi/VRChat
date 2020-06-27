@@ -2,8 +2,8 @@
   <div id="Vrm">
     <!-- 3Dモデル表示 -->
     <div class="view">
-      <h5 class="status">{{ status }}</h5>
-      <canvas ref="model" width="400" height="300"></canvas>
+      <p class="status">{{ status }}</p>
+      <canvas ref="model" width="200" height="150"></canvas>
     </div>
     <div>
       <label>モデルを選択：</label>
@@ -11,6 +11,9 @@
         <option disabled value>選択してください</option>
         <option value="JK.vrm">JK</option>
         <option value="sabaru.vrm">サーバルちゃん</option>
+        <option value="a.vrm">猫</option>
+        <option value="b.vrm">城禿君</option>
+        <option value="c.vrm">城禿君</option>
       </select>
       <button @click="Animate" class="btn btn-success">Animation</button>
     </div>
@@ -75,7 +78,7 @@ export default {
         antialias: true,
         canvas: $canvas
       });
-      this.renderer.setSize(400, 300);
+      this.renderer.setSize(300, 225);
       this.renderer.setPixelRatio(window.devicePixelRatio);
       this.renderer.setClearColor(0xffebcd);
     },
@@ -139,55 +142,12 @@ export default {
             return vrm.humanoid.getBoneNode(boneName);
           });
           console.log(bones);
-          const clip = THREE.AnimationClip.parseAnimation(
-            {
-              hierarchy: [
-                {
-                  keys: [
-                    {
-                      rot: new THREE.Quaternion()
-                        .setFromEuler(new THREE.Euler(Math.Pi / 3, 0, 0))
-                        .toArray(),
-                      time: 0.0
-                    },
-                    {
-                      rot: new THREE.Quaternion()
-                        .setFromEuler(new THREE.Euler(0, Math.Pi / 3, 0))
-                        .toArray(),
-                      time: 4.6
-                    },
-                    {
-                      rot: new THREE.Quaternion()
-                        .setFromEuler(new THREE.Euler(-Math.PI / 16, 0, 0))
-                        .toArray(),
-                      time: 4.8
-                    },
-                    {
-                      rot: new THREE.Quaternion()
-                        .setFromEuler(new THREE.Euler(0, 0, Math.Pi / 3))
-                        .toArray(),
-                      time: 5.0
-                    }
-                  ]
-                }
-              ]
-            },
-            bones
-          );
-          clip.tracks.some(track => {
-            track.name = track.name.replace(
-              /^\.bones\[([^\]]+)\].(position|quaternion|scale)$/,
-              "$1.$2"
-            );
-          });
-          this.mixer = new THREE.AnimationMixer(this.scene);
-          this.mixer.clipAction(clip).play();
         });
       });
       this.renderer.render(this.scene, this.camera);
     },
     Animate() {
-      /*
+      console.log("Called");
       this.isAnimate = true;
       let finished = true;
       if (this.currentVrm) {
@@ -195,8 +155,14 @@ export default {
         const Animation = [
           {
             Bone: this.currentVrm.humanoid.getBoneNode(
-              VRMSchema.HumanoidBoneName.Neck
+              VRMSchema.HumanoidBoneName.LeftUpperArm
             ).rotation.x,
+            Deg: Math.PI / 2
+          },
+          {
+            Bone: this.currentVrm.humanoid.getBoneNode(
+              VRMSchema.HumanoidBoneName.LeftLowerArm
+            ).rotation.y,
             Deg: Math.PI / 2
           }
         ];
@@ -208,17 +174,16 @@ export default {
           console.log(diff);
           if (diff > 0) {
             finished = false;
-            Animation[i].Bone = this.clock.elapsedTime * 0.1;
+            this.currentVrm.humanoid.getBoneNode(
+              VRMSchema.HumanoidBoneName.LeftUpperArm
+            ).rotation.x = this.clock.elapsedTime * 0.8;
+            this.currentVrm.humanoid.getBoneNode(
+              VRMSchema.HumanoidBoneName.LeftLowerArm
+            ).rotation.y = -this.clock.elapsedTime * 0.8;
           }
         }
         if (finished) this.isAnimate = false;
         this.currentVrm.update(deltaTime);
-      }
-      */
-      if (this.mixer) {
-        console.log("Called");
-        const delta = this.clock.getDelta();
-        this.mixer.update(delta);
       }
     },
     ChangeVrm(axis) {
