@@ -9,7 +9,7 @@
             <label>モデル：</label>
             <select v-model="modelName" @change="changeModel(modelName)" class="form-control">
               <option disabled value>選択してください</option>
-              <option value="JK.vrm">JK</option>
+              <option value="JK.vrm" selected>JK</option>
               <option value="sabaru.vrm">サーバルちゃん</option>
               <option value="a.vrm">猫</option>
               <option value="b.vrm">城禿君</option>
@@ -19,8 +19,7 @@
           <div class="form-group">
             <label>背景色：</label>
             <select v-model="color" @change="changeBackground(color)" class="form-control">
-              <option disabled value>選択してください</option>
-              <option value="0xffebcd">ベージュ</option>
+              <option value="0xffebcd" selected>ベージュ</option>
               <option value="0x9cbb1c">黄緑</option>
             </select>
           </div>
@@ -71,6 +70,7 @@ export default {
   top: 50%;
   z-index: 2;
   transform: translate(-50%, -50%);
+  width: 80%;
   max-width: 400px;
   max-height: 70vh;
   box-sizing: border-box;
