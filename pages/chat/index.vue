@@ -1,5 +1,12 @@
 <template>
   <div class="container">
+    <setting
+      :localStream="localStream"
+      v-if="viewFlag"
+      @close="closeWindows"
+      @changeModel="changeModel"
+      @changeBackground="changeBackground"
+    />
     <div class="row">
       <div class="col">
         <tracker ref="Tracker" @axis="axis" @getAudioTrack="getAudioTrack"></tracker>
@@ -21,6 +28,7 @@
         <li>マスクはしないでね</li>
       </ul>
     </div>
+    <button class="btn btn-info" @click="openSetting">設定</button>
   </div>
 </template>
 
@@ -28,26 +36,41 @@
 import Tracker from "~/components/Tracker.vue";
 import Vrm from "~/components/Vrm.vue";
 import WebRTC from "~/components/WebRTC.vue";
+import Setting from "~/components/Setting.vue";
 
 export default {
   components: {
     Tracker,
     Vrm,
-    WebRTC
+    WebRTC,
+    Setting
   },
   data() {
     return {
       localStream: "",
-      audioTrack: ""
+      audioTrack: "",
+      viewFlag: true
     };
   },
   mounted() {},
   methods: {
+    openSetting() {
+      this.viewFlag = true;
+    },
+    closeWindows() {
+      this.viewFlag = false;
+    },
     getStream(stream) {
       this.localStream = stream;
     },
     getAudioTrack(track) {
       this.audioTrack = track;
+    },
+    changeModel(modelName) {
+      this.$refs.Vrm.LoadModels(modelName);
+    },
+    changeBackground(color) {
+      this.$refs.Vrm.changeBackground(color);
     },
     startTracking() {
       this.$refs.Tracker.startTracking();
