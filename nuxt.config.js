@@ -60,7 +60,23 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: [
+    ['@nuxtjs/toast'],
+    ['nuxt-fontawesome']
+  ],
+  toast: {
+    position: 'top-right',
+    theme: "outline",
+    duration: 2000
+  },
+  fontawesome: {
+    imports: [
+      {
+        set: '@fortawesome/free-solid-svg-icons',
+        icons: ['fas']
+      }
+    ]
+  },
   /*
    ** Build configuration
    */
@@ -68,6 +84,7 @@ export default {
     /*
      ** You can extend webpack config here
      */
+    hardSource: true,
     noParse: /build\/clmtrackr/,
     extend: ({
       module,

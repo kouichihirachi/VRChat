@@ -3,7 +3,7 @@
     <!-- 3Dモデル表示 -->
     <div class="view">
       <p class="status">{{ status }}</p>
-      <canvas ref="model" width="200" height="150"></canvas>
+      <canvas ref="model" width="240" height="180"></canvas>
     </div>
     <div>
       <button @click="Animate" class="btn btn-success">Animation</button>
@@ -17,8 +17,9 @@
 }
 .view > .status {
   position: absolute;
-  top: 6em;
-  left: 5em;
+  font-size: 18px;
+  top: 4em;
+  left: 0.5em;
   bottom: 0;
   text-align: center;
   margin: auto;
@@ -69,7 +70,7 @@ export default {
         antialias: true,
         canvas: $canvas
       });
-      this.renderer.setSize(300, 225);
+      this.renderer.setSize(240, 180);
       this.renderer.setPixelRatio(window.devicePixelRatio);
       this.renderer.setClearColor(0xffebcd);
     },

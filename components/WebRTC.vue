@@ -3,15 +3,14 @@
     <div class="row" ref="remoteStream"></div>
     <div class="row">
       <div class="form-inline">
+        <!--
         <div class="form-group mb-2">
           <input type="text" v-model="roomName" placeholder="Room Name" class="form-control" />
         </div>
-        <button @click="connect" class="btn btn-info mb-2 mx-1">接続</button>
-        <button @click="close" class="btn btn-info mb-2 mx-1">閉じる</button>
+        -->
+        <button @click="connect" class="btn btn-outline-success mb-2 mx-1">接続</button>
+        <button @click="close" class="btn btn-outline-danger mb-2 mx-1">切断</button>
       </div>
-    </div>
-    <div class="row">
-      <textarea v-model="messages" class="form-control col-6"></textarea>
     </div>
   </div>
 </template>
@@ -33,7 +32,7 @@ export default {
       key: "2cc1c46b-a0e9-47bc-ab5e-65586b72ee58",
       debug: 3
     });
-    this.messages += "サーバーに接続しました\n";
+    //this.$toast.show("サーバーに接続しました");
     if (this.$nuxt.$route.query.room) {
       this.roomName = this.$nuxt.$route.query.room;
     }
@@ -49,30 +48,30 @@ export default {
         stream: this.localStream
       });
       this.room.once("open", () => {
-        this.messages += "体育館に入室しました\n";
+        this.$toast.show("入室しました");
       });
       this.room.once("data", data => {
         //データ受信
       });
       this.room.on("peerJoin", peerId => {
-        this.messages += `${peerId} が入室しました\n`;
+        this.$toast.show(`${peerId} が入室しました`);
       });
       this.room.on("stream", async stream => {
         if (!this.connectedPeers.includes(stream.peerId)) {
           this.connectedPeers.push(stream.peerId);
           const newVideo = document.createElement("video");
-          newVideo.width = 400;
-          newVideo.height = 300;
+          newVideo.width = 240;
+          newVideo.height = 180;
           newVideo.srcObject = stream;
           newVideo.playsInline = true;
           newVideo.setAttribute("data-peer-id", stream.peerId);
-          newVideo.className = "col-4";
+          //newVideo.className = "col-4";
           this.$refs.remoteStream.append(newVideo);
           await newVideo.play().catch(console.error);
         }
       });
       this.room.on("peerLeave", peerId => {
-        this.messages += `${peerId} が退出しました\n`;
+        this.$toast.show(`${peerId} が退室しました`);
         const remoteVideo = this.$refs.remoteStream.querySelector(
           "[data-peer-id='" + peerId + "']"
         );
@@ -92,7 +91,7 @@ export default {
         remoteVideo.remove();
       });
       this.room.close();
-      this.messages += "自主退場しました\n";
+      this.$toast.show(`退室しました`);
     }
   }
 };

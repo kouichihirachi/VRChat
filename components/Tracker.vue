@@ -2,8 +2,8 @@
   <div id="Tracker">
     <!-- カメラ表示 -->
     <div id="container">
-      <video id="camera" ref="camera" width="200" height="150" loop playsinline autoplay></video>
-      <canvas ref="cameraOverlay" id="cameraOverlay" width="200" height="150"></canvas>
+      <video id="camera" ref="camera" width="240" height="180" loop playsinline autoplay></video>
+      <canvas ref="cameraOverlay" id="cameraOverlay" width="240" height="180"></canvas>
       <!-- {{volume}} -->
     </div>
   </div>
