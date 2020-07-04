@@ -3,18 +3,9 @@
     <!-- 3Dモデル表示 -->
     <div class="view">
       <p class="status">{{ status }}</p>
-      <canvas ref="model" width="200" height="150"></canvas>
+      <canvas ref="model" width="240" height="180"></canvas>
     </div>
     <div>
-      <label>モデルを選択：</label>
-      <select v-model="modelName" @change="LoadModels(modelName)">
-        <option disabled value>選択してください</option>
-        <option value="JK.vrm">JK</option>
-        <option value="sabaru.vrm">サーバルちゃん</option>
-        <option value="a.vrm">猫</option>
-        <option value="b.vrm">城禿君</option>
-        <option value="c.vrm">城禿君</option>
-      </select>
       <button @click="Animate" class="btn btn-success">Animation</button>
     </div>
   </div>
@@ -26,8 +17,9 @@
 }
 .view > .status {
   position: absolute;
-  top: 6em;
-  left: 5em;
+  font-size: 18px;
+  top: 4em;
+  left: 0.5em;
   bottom: 0;
   text-align: center;
   margin: auto;
@@ -78,9 +70,12 @@ export default {
         antialias: true,
         canvas: $canvas
       });
-      this.renderer.setSize(300, 225);
+      this.renderer.setSize(240, 180);
       this.renderer.setPixelRatio(window.devicePixelRatio);
       this.renderer.setClearColor(0xffebcd);
+    },
+    changeBackground(color) {
+      this.renderer.setClearColor(Number(color));
     },
     CreateCamera() {
       // カメラ
