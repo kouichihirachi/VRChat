@@ -19,6 +19,8 @@
           <button class="btn btn-info" @click="openSetting">
             <font-awesome-icon icon="cogs" />
           </button>
+          <button @click="connect" class="btn btn-outline-success mb-2 mx-1">接続</button>
+          <button @click="close" class="btn btn-outline-danger mb-2 mx-1">切断</button>
         </div>
       </div>
       <div class="col">
@@ -80,6 +82,12 @@ export default {
   },
   mounted() {},
   methods: {
+    connect() {
+      this.$refs.WebRTC.connect();
+    },
+    close() {
+      this.$refs.WebRTC.close();
+    },
     openSetting() {
       this.viewFlag = true;
     },

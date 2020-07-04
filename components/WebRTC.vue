@@ -8,8 +8,6 @@
           <input type="text" v-model="roomName" placeholder="Room Name" class="form-control" />
         </div>
         -->
-        <button @click="connect" class="btn btn-outline-success mb-2 mx-1">接続</button>
-        <button @click="close" class="btn btn-outline-danger mb-2 mx-1">切断</button>
       </div>
     </div>
   </div>
@@ -52,6 +50,9 @@ export default {
       });
       this.room.once("data", data => {
         //データ受信
+        /*チャット機能実装*/
+        const user = data.peerId;
+        const message = data.message;
       });
       this.room.on("peerJoin", peerId => {
         this.$toast.show(`${peerId} が入室しました`);

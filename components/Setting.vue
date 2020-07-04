@@ -21,6 +21,7 @@
             <select v-model="color" @change="changeBackground(color)" class="form-control">
               <option value="0xffebcd" selected>ベージュ</option>
               <option value="0x9cbb1c">黄緑</option>
+              <option value="0xffa500">オレンジ</option>
             </select>
           </div>
         </div>
