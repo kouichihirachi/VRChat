@@ -1,62 +1,68 @@
 <template>
-  <div class="container">
-    <setting
-      :localStream="localStream"
-      v-if="viewFlag"
-      @close="closeWindows"
-      @changeModel="changeModel"
-      @changeBackground="changeBackground"
-    />
-    <div class="row">
-      <div class="col">
-        <tracker ref="Tracker" @axis="axis" @getAudioTrack="getAudioTrack"></tracker>
-        <vrm ref="Vrm" @getStream="getStream" @getTrack="getTrack" />
-        <div class="row">
-          <button
-            @click="changeTracking"
-            class="btn btn-success mr-1"
-          >{{isTracking?"トラッキング停止":"トラッキング開始"}}</button>
-          <button class="btn btn-info" @click="openSetting">
-            <font-awesome-icon icon="cogs" />
-          </button>
-          <button @click="connect" class="btn btn-outline-success mb-2 mx-1">接続</button>
-          <button @click="close" class="btn btn-outline-danger mb-2 mx-1">切断</button>
+  <div class="container-fluid background">
+    <div class="container">
+      <setting
+        :localStream="localStream"
+        v-if="viewFlag"
+        @close="closeWindows"
+        @changeModel="changeModel"
+        @changeBackground="changeBackground"
+      />
+      <div class="row">
+        <div class="col">
+          <div class="row">
+            <tracker ref="Tracker" @axis="axis" @getAudioTrack="getAudioTrack" class="mt-3 mb-3"></tracker>
+          </div>
+          <div class="row">
+            <vrm ref="Vrm" @getStream="getStream" @getTrack="getTrack" />
+          </div>
+          <div class="row">
+            <div class="jumbotron mt-3 pt-3 pb-3 bg-light">
+              <button @click="changeTracking" class="btn btn-success mr-1">{{isTracking?"停止":"開始"}}</button>
+              <button @click="toggleConnect" class="btn btn-info">{{isConnected?"切断":"接続"}}</button>
+              <button class="btn btn-dark" @click="openSetting">
+                <font-awesome-icon icon="cogs" />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col pt-3">
+          <WebRTC ref="WebRTC" :localStream="localStream" :audioTrack="audioTrack" />
         </div>
       </div>
-      <div class="col">
-        <WebRTC ref="WebRTC" :localStream="localStream" :audioTrack="audioTrack" />
-      </div>
+      <toast />
     </div>
-    <!--
-    <div class="row">
-      <div class="col">
-        <tracker ref="Tracker" @axis="axis" @getAudioTrack="getAudioTrack"></tracker>
-      </div>
-      <div class="col">
-        <vrm ref="Vrm" @getStream="getStream" @getTrack="getTrack" />
-      </div>
-    </div>
-    <div>
-      <WebRTC ref="WebRTC" :localStream="localStream" :audioTrack="audioTrack" />
-    </div>
-    <div class="row">
-      <button
-        @click="changeTracking"
-        class="btn btn-success mr-1"
-      >{{isTracking?"トラッキング停止":"トラッキング開始"}}</button>
-    </div>
-    <div class="row">
-      <ul>
-        <li>目をぱちぱちすると戻るよ</li>
-        <li>顔を隠さないでね</li>
-      </ul>
-    </div>
-    <button class="btn btn-info" @click="openSetting">設定</button>
-    -->
-    <toast />
   </div>
 </template>
-
+<style>
+.background {
+  position: relative;
+  height: 100vh;
+  min-height: 300px;
+  background-image: url("~assets/img/background.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  z-index: 0;
+  overflow: hidden;
+}
+.background::before {
+  content: "";
+  background: inherit;
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  z-index: -1;
+}
+</style>
 <script>
 import Tracker from "~/components/Tracker.vue";
 import Vrm from "~/components/Vrm.vue";
@@ -77,7 +83,8 @@ export default {
       localStream: "",
       audioTrack: "",
       viewFlag: true,
-      isTracking: false
+      isTracking: false,
+      isConnected: false
     };
   },
   mounted() {},
@@ -87,6 +94,11 @@ export default {
     },
     close() {
       this.$refs.WebRTC.close();
+    },
+    toggleConnect() {
+      this.isConnected = !this.isConnected;
+      if (this.isConnected) this.$refs.WebRTC.connect();
+      else this.$refs.WebRTC.close();
     },
     openSetting() {
       this.viewFlag = true;

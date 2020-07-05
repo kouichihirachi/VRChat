@@ -100,6 +100,7 @@ export default {
     ctrack.init();
 
     //fpsモニタリング用
+    /*
     const stats = new Stats();
     document.body.appendChild(stats.domElement);
     // update stats on every iteration
@@ -110,6 +111,7 @@ export default {
       },
       false
     );
+    */
   },
   methods: {
     getFrequency() {

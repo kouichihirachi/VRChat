@@ -8,8 +8,8 @@
           <div class="form-group">
             <label>モデル：</label>
             <select v-model="modelName" @change="changeModel(modelName)" class="form-control">
-              <option disabled value>選択してください</option>
-              <option value="JK.vrm" selected>JK</option>
+              <option disabled>選択してください</option>
+              <option value="JK.vrm" selected="selected">JK</option>
               <option value="sabaru.vrm">サーバルちゃん</option>
               <option value="a.vrm">猫</option>
               <option value="b.vrm">城禿君</option>
@@ -19,7 +19,8 @@
           <div class="form-group">
             <label>背景色：</label>
             <select v-model="color" @change="changeBackground(color)" class="form-control">
-              <option value="0xffebcd" selected>ベージュ</option>
+              <option disabled>選択してください</option>
+              <option value="0xffebcd" selected="selected">ベージュ</option>
               <option value="0x9cbb1c">黄緑</option>
               <option value="0xffa500">オレンジ</option>
             </select>
@@ -38,9 +39,9 @@
 <script>
 import Vrm from "~/components/Vrm.vue";
 export default {
-  modelName() {
-    this.modelName = "JK.vrm";
-    this.color = "";
+  data: {
+    color: "0xffebcd",
+    modelName: "JK.vrm"
   },
   methods: {
     close() {

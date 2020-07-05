@@ -1,15 +1,6 @@
 <template>
   <div id="webrtc">
-    <div class="row" ref="remoteStream"></div>
-    <div class="row">
-      <div class="form-inline">
-        <!--
-        <div class="form-group mb-2">
-          <input type="text" v-model="roomName" placeholder="Room Name" class="form-control" />
-        </div>
-        -->
-      </div>
-    </div>
+    <div class="row mr-3" ref="remoteStream"></div>
   </div>
 </template>
 <script>

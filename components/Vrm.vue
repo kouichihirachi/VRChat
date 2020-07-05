@@ -5,9 +5,11 @@
       <p class="status">{{ status }}</p>
       <canvas ref="model" width="240" height="180"></canvas>
     </div>
+    <!--
     <div>
       <button @click="Animate" class="btn btn-success">Animation</button>
     </div>
+    -->
   </div>
 </template>
 
