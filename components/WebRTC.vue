@@ -73,6 +73,12 @@ export default {
         remoteVideo.remove();
       });
     },
+    mute() {
+      this.localStream.getVideoTracks()[0].enabled = false;
+    },
+    unmute() {
+      this.localStream.getVideoTracks()[0].enabled = true;
+    },
     send(axis) {
       this.room.send(axis);
     },

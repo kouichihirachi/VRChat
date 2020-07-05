@@ -18,10 +18,17 @@
           </div>
           <div class="row">
             <div class="jumbotron mt-3 pt-3 pb-3 bg-light">
-              <button @click="changeTracking" class="btn btn-success mr-1">{{isTracking?"停止":"開始"}}</button>
+              <button @click="changeTracking" class="btn btn-success mr-1">
+                <font-awesome-icon v-if="isTracking" icon="stop" />
+                <font-awesome-icon v-if="!isTracking" icon="play" />
+              </button>
               <button @click="toggleConnect" class="btn btn-info">{{isConnected?"切断":"接続"}}</button>
               <button class="btn btn-dark" @click="openSetting">
                 <font-awesome-icon icon="cogs" />
+              </button>
+              <button @click="toggleMute" class="btn btn-info">
+                <font-awesome-icon v-if="isMuted" icon="volume-up" />
+                <font-awesome-icon v-if="!isMuted" icon="volume-off" />
               </button>
             </div>
           </div>
@@ -84,11 +91,17 @@ export default {
       audioTrack: "",
       viewFlag: true,
       isTracking: false,
-      isConnected: false
+      isConnected: false,
+      isMuted: false
     };
   },
   mounted() {},
   methods: {
+    toggleMute() {
+      this.isMuted = !this.isMuted;
+      if (this.isMuted) this.$refs.WebRTC.mute();
+      else this.$refs.WebRTC.unmute();
+    },
     connect() {
       this.$refs.WebRTC.connect();
     },

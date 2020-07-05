@@ -39,9 +39,11 @@
 <script>
 import Vrm from "~/components/Vrm.vue";
 export default {
-  data: {
-    color: "0xffebcd",
-    modelName: "JK.vrm"
+  data() {
+    return {
+      color: "0xffebcd",
+      modelName: "JK.vrm"
+    };
   },
   methods: {
     close() {
