@@ -1,6 +1,7 @@
 <template>
   <div id="webrtc">
-    <div class="row mr-3" ref="remoteStream"></div>
+    <div class="row" ref="remoteStream"></div>
+    <video width="720" height="540" class="pt-1" ref="mainStream" loop playsinline autoplay></video>
   </div>
 </template>
 <script>
@@ -12,11 +13,12 @@ export default {
       peer: "",
       connectedPeers: [],
       room: "",
-      messages: ""
+      messages: "",
+      displayStream: ""
     };
   },
   props: ["localStream", "audioTrack"],
-  mounted() {
+  async mounted() {
     this.peer = new peer({
       key: "2cc1c46b-a0e9-47bc-ab5e-65586b72ee58",
       debug: 3
@@ -25,6 +27,7 @@ export default {
     if (this.$nuxt.$route.query.room) {
       this.roomName = this.$nuxt.$route.query.room;
     }
+    //this.displayStream = await navigator.mediaDevices.getDisplayMedia();
   },
   methods: {
     connect() {
@@ -57,6 +60,7 @@ export default {
           newVideo.srcObject = stream;
           newVideo.playsInline = true;
           newVideo.setAttribute("data-peer-id", stream.peerId);
+          this.$refs.mainStream.srcObject = stream;
           //newVideo.className = "col-4";
           this.$refs.remoteStream.append(newVideo);
           await newVideo.play().catch(console.error);
@@ -72,6 +76,11 @@ export default {
         remoteVideo.srcObject = null;
         remoteVideo.remove();
       });
+    },
+    async startMirroir() {
+      this.displayStream = await navigator.mediaDevices.getDisplayMedia();
+      this.localStream = this.displayStream;
+      this.localStream.addTrack(this.audioTrack);
     },
     mute() {
       this.localStream.getAudioTracks()[0].enabled = false;

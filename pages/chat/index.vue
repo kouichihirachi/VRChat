@@ -9,7 +9,7 @@
         @changeBackground="changeBackground"
       />
       <div class="row">
-        <div class="col">
+        <div class="col^6">
           <div class="row">
             <tracker ref="Tracker" @axis="axis" @getAudioTrack="getAudioTrack" class="mt-3 mb-3"></tracker>
           </div>
@@ -19,8 +19,8 @@
           <div class="row">
             <div class="jumbotron mt-3 pt-3 pb-3 bg-light">
               <button @click="changeTracking" class="btn btn-success mr-1">
-                <font-awesome-icon v-if="!isTracking" icon="stop" />
-                <font-awesome-icon v-if="isTracking" icon="play" />
+                <font-awesome-icon v-if="isTracking" icon="stop" />
+                <font-awesome-icon v-if="!isTracking" icon="play" />
               </button>
               <button @click="toggleConnect" class="btn btn-info">{{isConnected?"切断":"接続"}}</button>
               <button class="btn btn-dark" @click="openSetting">
@@ -30,10 +30,13 @@
                 <font-awesome-icon v-if="isMuted" icon="volume-up" />
                 <font-awesome-icon v-if="!isMuted" icon="volume-off" />
               </button>
+              <button @click="mirror" class="btn btn-info">
+                <font-awesome-icon icon="desktop" />
+              </button>
             </div>
           </div>
         </div>
-        <div class="col pt-3">
+        <div class="col-6 pt-3">
           <WebRTC ref="WebRTC" :localStream="localStream" :audioTrack="audioTrack" />
         </div>
       </div>
@@ -97,6 +100,9 @@ export default {
   },
   mounted() {},
   methods: {
+    mirror() {
+      this.$refs.WebRTC.startMirroir();
+    },
     toggleMute() {
       this.isMuted = !this.isMuted;
       if (this.isMuted) this.$refs.WebRTC.mute();

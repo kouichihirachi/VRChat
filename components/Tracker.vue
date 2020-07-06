@@ -128,13 +128,6 @@ export default {
       this.overlayCC.clearRect(0, 0, this.vidWidth, this.vidHeight);
 
       let axis = {};
-      //口の動き
-      if (this.analyser) {
-        this.volume = Math.floor(this.getFrequency());
-        const threshold = 10; //閾値以上の音を拾う
-        this.volume = (this.volume - threshold) / (100 - threshold);
-        axis.volume = this.volume;
-      }
 
       if (ctrack.getCurrentPosition() && this.isTracking) {
         let event = ctrack.getCurrentPosition();
@@ -144,6 +137,15 @@ export default {
         axis = this.getMovingAverage(axis);
         ctrack.draw(this.overlay);
       }
+
+      //口の動き
+      if (this.analyser) {
+        this.volume = Math.floor(this.getFrequency());
+        const threshold = 10; //閾値以上の音を拾う
+        this.volume = (this.volume - threshold) / (100 - threshold);
+        axis.volume = this.volume;
+      }
+
       if (axis === {}) axis = 0;
       this.$emit("axis", axis);
       return;
