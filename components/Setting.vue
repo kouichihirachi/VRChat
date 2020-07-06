@@ -23,6 +23,7 @@
               <option value="0xffebcd" selected="selected">ベージュ</option>
               <option value="0x9cbb1c">黄緑</option>
               <option value="0xffa500">オレンジ</option>
+              <option value="0xffffff">白</option>
             </select>
           </div>
         </div>
@@ -41,8 +42,8 @@ import Vrm from "~/components/Vrm.vue";
 export default {
   data() {
     return {
-      color: "0xffebcd",
-      modelName: "JK.vrm"
+      color: "",
+      modelName: ""
     };
   },
   methods: {
@@ -50,9 +51,11 @@ export default {
       this.$emit("close");
     },
     changeModel(modelName) {
+      this.modelName = modelName;
       this.$emit("changeModel", modelName);
     },
     changeBackground(color) {
+      this.color = color;
       this.$emit("changeBackground", color);
     }
   }

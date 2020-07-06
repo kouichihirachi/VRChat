@@ -1,7 +1,7 @@
 <template>
   <div id="webrtc">
     <div class="row" ref="remoteStream"></div>
-    <video width="720" height="540" class="pt-1" ref="mainStream" loop playsinline autoplay></video>
+    <video width="440" height="330" class="pt-1" ref="mainStream" loop playsinline autoplay></video>
   </div>
 </template>
 <script>
