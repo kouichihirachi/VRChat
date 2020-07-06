@@ -19,8 +19,8 @@
           <div class="row">
             <div class="jumbotron mt-3 pt-3 pb-3 bg-light">
               <button @click="changeTracking" class="btn btn-success mr-1">
-                <font-awesome-icon v-if="isTracking" icon="stop" />
-                <font-awesome-icon v-if="!isTracking" icon="play" />
+                <font-awesome-icon v-if="!isTracking" icon="stop" />
+                <font-awesome-icon v-if="isTracking" icon="play" />
               </button>
               <button @click="toggleConnect" class="btn btn-info">{{isConnected?"切断":"接続"}}</button>
               <button class="btn btn-dark" @click="openSetting">
