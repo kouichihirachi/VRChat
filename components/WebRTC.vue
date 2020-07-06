@@ -74,10 +74,10 @@ export default {
       });
     },
     mute() {
-      this.localStream.getVideoTracks()[0].enabled = false;
+      this.localStream.getAudioTracks()[0].enabled = false;
     },
     unmute() {
-      this.localStream.getVideoTracks()[0].enabled = true;
+      this.localStream.getAudioTracks()[0].enabled = true;
     },
     send(axis) {
       this.room.send(axis);
