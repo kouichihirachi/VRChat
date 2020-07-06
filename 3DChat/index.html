@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>three-vrm example</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <style>
+    #overlay {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      -o-transform: scaleX(-1);
+      -webkit-transform: scaleX(-1);
+      transform: scaleX(-1);
+      -ms-filter: fliph;
+      /*IE*/
+      filter: fliph;
+      /*IE*/
+    }
+
+    #videoel {
+      -o-transform: scaleX(-1);
+      -webkit-transform: scaleX(-1);
+      transform: scaleX(-1);
+      -ms-filter: fliph;
+      /*IE*/
+      filter: fliph;
+      /*IE*/
+    }
+    
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body onload="startVideo()" style='color: white'>
+
+  <div id="container">
+    <video id="videoel" width="400" height="300" preload="auto" loop playsinline autoplay>
+    </video>
+    <canvas id="overlay" width="400" height="300"></canvas>
+    <canvas id="output"></canvas>
+  </div>
+
+  <button type='submit' name='action' value='add' onclick="setting()">セット</button>
+  <button type='submit' name='action' value='add' onclick="isAnimate=1">セット</button>
+
+  <!--<button type='submit' name='action' value='add' onclick="hans*=-1">挙手</button> -->
+
+  <!-- THREE.JS読み込み -->
+  <script src="https://unpkg.com/three@0.114.0/build/three.js"></script>
+  <!-- GLTGLoader読み込み -->
+  <script src="https://unpkg.com/three@0.114.0/examples/js/loaders/GLTFLoader.js"></script>
+  <!-- OrbitControls読み込み -->
+  <script src="https://unpkg.com/three@0.114.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- THREE-VRM.JS 読み込み -->
+  <script src="/script/three-vrm.js"></script>
+  <!-- Clmtracker読み込み-->
+  <script src="/script/clmtrackr.js"></script>
+  <script src="/script/Stats.js"></script>
+
+  <!-- メインスクリプト読み込み -->
+  <script src="3d.js"></script>
+  <script src="Vrm.js"></script>
+  <script src="main.js"></script>
+
+</body>
+
+</html>
