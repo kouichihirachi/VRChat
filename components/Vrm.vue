@@ -209,7 +209,7 @@ export default {
           axis.volume
         );
         if (axis.x && axis.y && axis.z) {
-          // ボーンをセット
+          // ボーンをセットs
           this.currentVrm.humanoid.getBoneNode(
             VRMSchema.HumanoidBoneName.Neck
           ).rotation.x = axis.x;
