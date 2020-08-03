@@ -49,7 +49,7 @@ export default {
       status,
       modelName,
       isAnimate,
-      mixer
+      mixer,
     };
   },
   mounted() {
@@ -70,7 +70,7 @@ export default {
       const $canvas = this.$refs.model;
       this.renderer = new THREE.WebGLRenderer({
         antialias: true,
-        canvas: $canvas
+        canvas: $canvas,
       });
       this.renderer.setSize(240, 180);
       this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -112,8 +112,8 @@ export default {
       const modelSrc = "/models/" + modelName; // 利用するモデルの配置場所
       const loader = new GLTFLoader();
       loader.crossOrigin = "anonymous";
-      loader.load(modelSrc, gltf => {
-        VRM.from(gltf).then(vrm => {
+      loader.load(modelSrc, (gltf) => {
+        VRM.from(gltf).then((vrm) => {
           this.status = "";
           VRMUtils.removeUnnecessaryJoints(gltf.scene);
           if (this.scene != null) {
@@ -135,7 +135,7 @@ export default {
           ).rotation.z = -0.1;
 
           // keyframe animations
-          const bones = [VRMSchema.HumanoidBoneName.Neck].map(boneName => {
+          const bones = [VRMSchema.HumanoidBoneName.Neck].map((boneName) => {
             return vrm.humanoid.getBoneNode(boneName);
           });
           console.log(bones);
@@ -154,14 +154,14 @@ export default {
             Bone: this.currentVrm.humanoid.getBoneNode(
               VRMSchema.HumanoidBoneName.LeftUpperArm
             ).rotation.x,
-            Deg: Math.PI / 2
+            Deg: Math.PI / 2,
           },
           {
             Bone: this.currentVrm.humanoid.getBoneNode(
               VRMSchema.HumanoidBoneName.LeftLowerArm
             ).rotation.y,
-            Deg: Math.PI / 2
-          }
+            Deg: Math.PI / 2,
+          },
         ];
         for (let i = 0; i < Animation.length; i++) {
           const target = Animation[i].Deg;
@@ -186,6 +186,9 @@ export default {
     ChangeVrm(axis) {
       //瞬き
       if (this.currentVrm) {
+        const canvas = this.renderer.domElement;
+        this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
+
         if (this.isAnimate) this.Animate();
         const blinkVal =
           Math.sin((this.clock.elapsedTime * 1) / 3) ** 1024 +
@@ -226,7 +229,7 @@ export default {
         // VRMモデルを更新
         this.renderer.render(this.scene, this.camera);
       }
-    }
-  }
+    },
+  },
 };
 </script>

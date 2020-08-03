@@ -38,8 +38,8 @@ import Stats from "stats.js";
 
 const ctrack = new clm.tracker({
   faceDetection: {
-    useWebWorkers: false
-  }
+    useWebWorkers: false,
+  },
 });
 
 export default {
@@ -69,7 +69,7 @@ export default {
       analyser,
       frequencies,
       volume,
-      isTracking
+      isTracking,
     };
   },
   async mounted() {
@@ -79,13 +79,21 @@ export default {
     this.vidWidth = this.vid.width;
     this.vidHeight = this.vid.height;
     this.isTracking = false;
+
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+    } catch {
+      //エラー発生時
+      alert("カメラの使用を許可してください");
+      this.$emit("getAudioTrack", -1);
+      return;
+    }
+
     this.drawLoop();
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true
-    });
-
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     var context = new AudioContext();
     this.analyser = context.createAnalyser();
@@ -105,7 +113,7 @@ export default {
     // update stats on every iteration
     document.addEventListener(
       "clmtrackrIteration",
-      function(event) {
+      function (event) {
         stats.update();
       },
       false
@@ -116,7 +124,7 @@ export default {
       //周波数ごとの振幅を取得して配列に格納
       this.analyser.getByteFrequencyData(this.frequencies);
       return (
-        this.frequencies.reduce(function(previous, current) {
+        this.frequencies.reduce(function (previous, current) {
           return previous + current;
         }) / this.analyser.frequencyBinCount
       );
@@ -178,7 +186,7 @@ export default {
         var t2 = event[62],
           t1 = [
             (event[13][0] - event[1][0]) / 2,
-            (event[13][1] - event[1][1]) / 2
+            (event[13][1] - event[1][1]) / 2,
           ];
         let yParam = 1.6; //中央のときのatan2の値
         var yDeg =
@@ -197,7 +205,7 @@ export default {
         return {
           x: xDeg,
           y: yDeg,
-          z: zDeg
+          z: zDeg,
         };
       }
     },
@@ -242,7 +250,7 @@ export default {
       return {
         x: x,
         y: y,
-        z: z
+        z: z,
       };
     },
     getMovingAverage(axis) {
@@ -274,7 +282,7 @@ export default {
       if (axis.y < -limit / 2) axis.y = -limit / 2;
       if (axis.z < -limit) axis.z = -limit;
       return axis;
-    }
-  }
+    },
+  },
 };
 </script>

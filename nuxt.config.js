@@ -85,7 +85,6 @@ export default {
      ** You can extend webpack config here
      */
     hardSource: true,
-    noParse: /build\/clmtrackr/,
     extend: ({
       module,
       output
