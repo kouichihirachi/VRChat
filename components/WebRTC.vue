@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import peer from "skyway-js";
+import Peer from "skyway-js";
 export default {
   data: () => {
     return {
@@ -19,22 +19,20 @@ export default {
   },
   props: ["localStream", "audioTrack"],
   async mounted() {
-    this.peer = new peer({
+    this.peer = new Peer({
       key: "2cc1c46b-a0e9-47bc-ab5e-65586b72ee58",
       debug: 3,
     });
-    //this.$toast.show("サーバーに接続しました");
     if (this.$nuxt.$route.query.room) {
       this.roomName = this.$nuxt.$route.query.room;
     }
-    //this.displayStream = await navigator.mediaDevices.getDisplayMedia();
   },
   methods: {
     connect() {
       if (!this.roomName) {
         return;
       }
-      if (this.audioTrack != -1) this.localStream.addTrack(this.audioTrack);
+      if (this.audioTrack !== -1) this.localStream.addTrack(this.audioTrack);
       this.room = this.peer.joinRoom(this.roomName, {
         mode: "sfu",
         stream: this.localStream,
@@ -60,8 +58,8 @@ export default {
           newVideo.srcObject = stream;
           newVideo.playsInline = true;
           newVideo.setAttribute("data-peer-id", stream.peerId);
+          newVideo.onclick =
           this.$refs.mainStream.srcObject = stream;
-          //newVideo.className = "col-4";
           this.$refs.remoteStream.append(newVideo);
           await newVideo.play().catch(console.error);
         }
@@ -77,10 +75,14 @@ export default {
         remoteVideo.remove();
       });
     },
-    async startMirroir() {
-      this.displayStream = await navigator.mediaDevices.getDisplayMedia();
+    async startMirror() {
+      try {
+        this.displayStream = await navigator.mediaDevices.getDisplayMedia();
+      }catch {
+        alert("画面共有を開始できません");
+      }
       this.localStream = this.displayStream;
-      if (this.audioTrack != -1) this.localStream.addTrack(this.audioTrack);
+      if (this.audioTrack !== -1) this.localStream.addTrack(this.audioTrack);
     },
     mute() {
       this.localStream.getAudioTracks()[0].enabled = false;

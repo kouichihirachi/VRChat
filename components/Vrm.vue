@@ -42,7 +42,6 @@ export default {
     return {
       renderer,
       camera,
-      currentVrm,
       scene,
       clock,
       currentVrm,
