@@ -40,7 +40,6 @@
           <WebRTC ref="WebRTC" :localStream="localStream" :audioTrack="audioTrack" />
         </div>
       </div>
-      <toast />
     </div>
   </div>
 </template>
@@ -78,7 +77,6 @@ import Tracker from "~/components/Tracker.vue";
 import Vrm from "~/components/Vrm.vue";
 import WebRTC from "~/components/WebRTC.vue";
 import Setting from "~/components/Setting.vue";
-import Toast from "~/components/Toast.vue";
 
 export default {
   components: {
@@ -86,7 +84,6 @@ export default {
     Vrm,
     WebRTC,
     Setting,
-    Toast
   },
   data() {
     return {

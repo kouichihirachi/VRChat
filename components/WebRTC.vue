@@ -1,17 +1,25 @@
 <template>
   <div id="webrtc">
-    <div class="row" ref="remoteStream"></div>
-    <video width="440" height="330" class="pt-1" ref="mainStream" loop playsinline autoplay></video>
+    <div class="row" ref="remoteStream">
+      <Video v-for="stream in remoteStreams" autoplay :stream="stream.stream" :peerId="stream.peerId"></Video>
+    </div>
+    <video width="360" height="270" class="pt-1" ref="mainStream" loop playsinline autoplay></video>
   </div>
 </template>
 <script>
 import Peer from "skyway-js";
+import Video from "~/components/Video.vue";
+
 export default {
+  components:{
+    Video
+  },
   data: () => {
     return {
       roomName: "",
       peer: "",
       connectedPeers: [],
+      remoteStreams: [],
       room: "",
       messages: "",
       displayStream: "",
@@ -52,33 +60,33 @@ export default {
       this.room.on("stream", async (stream) => {
         if (!this.connectedPeers.includes(stream.peerId)) {
           this.connectedPeers.push(stream.peerId);
+          this.remoteStreams.push({
+            peerId: stream.peerId,
+            stream: stream
+          });
+          /*
           const newVideo = document.createElement("video");
           newVideo.width = 240;
           newVideo.height = 180;
           newVideo.srcObject = stream;
           newVideo.playsInline = true;
           newVideo.setAttribute("data-peer-id", stream.peerId);
-          newVideo.onclick =
           this.$refs.mainStream.srcObject = stream;
           this.$refs.remoteStream.append(newVideo);
           await newVideo.play().catch(console.error);
+           */
         }
       });
       this.room.on("peerLeave", (peerId) => {
         this.$toast.show(`${peerId} が退室しました`);
-        const remoteVideo = this.$refs.remoteStream.querySelector(
-          "[data-peer-id='" + peerId + "']"
-        );
         this.connectedPeers = this.connectedPeers.filter((id) => id !== peerId);
-        remoteVideo.srcObject.getTracks().forEach((track) => track.stop());
-        remoteVideo.srcObject = null;
-        remoteVideo.remove();
+        this.remoteStreams = this.remoteStreams.filter(stream => stream.peerId !== peerId);
       });
     },
     async startMirror() {
       try {
         this.displayStream = await navigator.mediaDevices.getDisplayMedia();
-      }catch {
+      } catch {
         alert("画面共有を開始できません");
       }
       this.localStream = this.displayStream;
@@ -94,11 +102,7 @@ export default {
       this.room.send(axis);
     },
     close() {
-      Array.from(this.$refs.remoteStream.children).forEach((remoteVideo) => {
-        remoteVideo.srcObject.getTracks().forEach((track) => track.stop());
-        remoteVideo.srcObject = null;
-        remoteVideo.remove();
-      });
+      this.remoteStreams = [];
       this.room.close();
       this.$toast.show(`退室しました`);
     },
