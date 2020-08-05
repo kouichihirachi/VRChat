@@ -1,17 +1,33 @@
 <template>
   <div id="webrtc">
-    <div class="row" ref="remoteStream">
-      <Video v-for="stream in remoteStreams" autoplay :stream="stream.stream" :peerId="stream.peerId"></Video>
+    <div class="row" id="remoteStream">
+      <Video v-for="stream in remoteStreams"
+             autoplay
+             :stream="stream.stream"
+             :peerId="stream.peerId"
+             v-on:focused="focus"
+      >
+      </Video>
     </div>
-    <video width="360" height="270" class="pt-1" ref="mainStream" loop playsinline autoplay></video>
+    <video width="360" height="270" class="pt-1" :srcObject.prop="focusVideo.stream" loop playsinline autoplay></video>
   </div>
 </template>
+<style>
+#remoteStream{
+  background: gray;
+  width:480px;
+  height: 210px;
+  padding: 10px;
+  margin: 0 auto;
+  overflow:auto;
+}
+</style>
 <script>
 import Peer from "skyway-js";
 import Video from "~/components/Video.vue";
 
 export default {
-  components:{
+  components: {
     Video
   },
   data: () => {
@@ -23,6 +39,7 @@ export default {
       room: "",
       messages: "",
       displayStream: "",
+      focusVideo: ""
     };
   },
   props: ["localStream", "audioTrack"],
@@ -64,23 +81,13 @@ export default {
             peerId: stream.peerId,
             stream: stream
           });
-          /*
-          const newVideo = document.createElement("video");
-          newVideo.width = 240;
-          newVideo.height = 180;
-          newVideo.srcObject = stream;
-          newVideo.playsInline = true;
-          newVideo.setAttribute("data-peer-id", stream.peerId);
-          this.$refs.mainStream.srcObject = stream;
-          this.$refs.remoteStream.append(newVideo);
-          await newVideo.play().catch(console.error);
-           */
         }
       });
       this.room.on("peerLeave", (peerId) => {
         this.$toast.show(`${peerId} が退室しました`);
         this.connectedPeers = this.connectedPeers.filter((id) => id !== peerId);
         this.remoteStreams = this.remoteStreams.filter(stream => stream.peerId !== peerId);
+        if (peerId == this.focusVideo.peerId) this.focusVideo = "";
       });
     },
     async startMirror() {
@@ -105,7 +112,11 @@ export default {
       this.remoteStreams = [];
       this.room.close();
       this.$toast.show(`退室しました`);
+      this.focusVideo="";
     },
+    focus(data) {
+      this.focusVideo = data;
+    }
   },
 };
 </script>

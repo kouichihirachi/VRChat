@@ -98,7 +98,7 @@ export default {
   mounted() {},
   methods: {
     mirror() {
-      this.$refs.WebRTC.startMirroir();
+      this.$refs.WebRTC.startMirror();
     },
     toggleMute() {
       this.isMuted = !this.isMuted;
