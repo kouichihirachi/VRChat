@@ -204,12 +204,12 @@ export default {
           let middle = bottoms + (tops - bottoms) / 2;
           let centerValue = 0.9; //顔が正面のときのxDeg値
           let xDeg =
-            ((((centerValue - event[37][1] / middle) / 0.2) * Math.PI) / 2)-center_x;
+            ((((centerValue - event[37][1] / middle) / 0.2) * Math.PI) / 2);//-center_x;
           //console.log(xDeg);
           // Y軸方向の傾き
-          let yDeg=-Math.atan((event[33][0]-((event[25][0]+event[30][0])/2))/((event[14][0]-event[0][0])/2))*4-center_y;
+          let yDeg=-Math.atan((event[33][0]-((event[25][0]+event[30][0])/2))/((event[14][0]-event[0][0])/2))*4;//-center_y;
           // Z軸方向の傾き
-          let zDeg = Math.atan((event[27][1]-event[33][1])/(event[32][0]-event[27][0]))*1.5-center_z;
+          let zDeg = Math.atan((event[27][1]-event[33][1])/(event[32][0]-event[27][0]))*1.5;//-center_z;
           return {
             x: xDeg,
             y: yDeg,
