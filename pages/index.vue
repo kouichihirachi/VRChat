@@ -7,14 +7,14 @@
         >
           <div class="text-center">
             <h1>V会議</h1>
-            <p class="text-muted">Make Your Confarence More Fun!</p>
+            <p class="text-muted">Make Your Conference More Fun!</p>
           </div>
           <hr />V会議はあなたがバーチャルアバターで
           <br />会議に参加できる新しいWeb会議システム
           <hr />
           <div class="form-group mb-2">
-            <label>RoomID</label>
-            <input type="text" class="form-control" v-model="roomId" placeholder="RoomID" />
+            <label for="roomId">RoomID</label>
+            <input id="roomId" type="text" class="form-control" v-model="roomId" placeholder="RoomID" />
           </div>
           <div class="form-group">
             <nuxt-link :to="{name:'chat',query:{room:roomId}}" class="btn btn-info">会議を開始</nuxt-link>

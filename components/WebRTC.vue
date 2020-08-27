@@ -87,7 +87,7 @@ export default {
         this.$toast.show(`${peerId} が退室しました`);
         this.connectedPeers = this.connectedPeers.filter((id) => id !== peerId);
         this.remoteStreams = this.remoteStreams.filter(stream => stream.peerId !== peerId);
-        if (peerId == this.focusVideo.peerId) this.focusVideo = "";
+        if (peerId === this.focusVideo.peerId) this.focusVideo = "";
       });
     },
     async startMirror() {
