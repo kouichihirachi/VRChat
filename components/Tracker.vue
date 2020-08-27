@@ -166,8 +166,8 @@ export default {
         this.isTracking = false;
       }
     },
-    //初期設定
-    Initial_Tilit(event) {
+    //初期設定:コメントアウト後で外す
+    /*Initial_Tilit(event) {
       let centerValue = 0.9;//顔が正面のときのxDeg値
       let yParam = 1.6;//中央のときのatan2の値 
 
@@ -183,12 +183,13 @@ export default {
       nose_length=Math.sqrt(Math.pow((event[33][0]-event[62][0]),2)+Math.pow((event[33][1]-event[62][1]),2));
       nose_length2=nose_length;
       return ;
-    },
+    },*/
     mapEventTo3dTransforms(event) {
       //2次元座標から3次元の傾きを取得
       //全体的に微妙なところがある
       if (event) {
-        let bigin_x=230;
+        //コメントアウト後で外す
+        /*let bigin_x=230;
         let bigin_y=200;
 
         //現在の鼻の長さ
@@ -196,7 +197,7 @@ export default {
         //どのくらいの距離移動したか
         let scaler=Math.sqrt(Math.pow((event[62][0]-bigin_x),2)+Math.pow((event[62][1]-bigin_y),2));
         if((90>=scaler)&&(Math.abs(scale)<=(nose_length2+0.7))){
-          nose_length2=scale;
+          nose_length2=scale;*/
           // X軸方向の傾き
           let tops = (event[0][1] + event[14][1]) / 2;
           let bottoms = (event[6][1] + event[8][1]) / 2;
@@ -214,7 +215,8 @@ export default {
             y: yDeg,
             z: zDeg
           };
-        }
+        //コメントアウト後で外す
+        /*}
         else{
           nose_length2=nose_length;  
           return {
@@ -222,7 +224,7 @@ export default {
             y: 0,
             z: 0
          };
-        } 
+        } */
       }
     },
     limiter(axis) {
