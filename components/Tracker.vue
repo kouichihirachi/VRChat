@@ -4,6 +4,7 @@
     <div id="container">
       <video id="camera" ref="camera" width="240" height="180" loop playsinline autoplay></video>
       <canvas ref="cameraOverlay" id="cameraOverlay" width="240" height="180"></canvas>
+      <!-- {{volume}} -->
     </div>
   </div>
 </template>
@@ -37,8 +38,8 @@ import Stats from "stats.js";
 
 const ctrack = new clm.tracker({
   faceDetection: {
-    useWebWorkers: false,
-  },
+    useWebWorkers: false
+  }
 });
 
 export default {
@@ -55,7 +56,9 @@ export default {
       analyser,
       frequencies,
       volume,
-      isTracking;
+      isTracking,
+      nose_length,
+      nose_length2;
     return {
       render,
       tracker,
@@ -69,6 +72,8 @@ export default {
       frequencies,
       volume,
       isTracking,
+      nose_length,
+      nose_length2
     };
   },
   async mounted() {
@@ -78,21 +83,13 @@ export default {
     this.vidWidth = this.vid.width;
     this.vidHeight = this.vid.height;
     this.isTracking = false;
-
-    let stream;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-    } catch {
-      //エラー発生時
-      alert("カメラの使用を許可してください");
-      this.$emit("getAudioTrack", -1);
-      return;
-    }
-
     this.drawLoop();
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true
+    });
+
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     var context = new AudioContext();
     this.analyser = context.createAnalyser();
@@ -112,7 +109,7 @@ export default {
     // update stats on every iteration
     document.addEventListener(
       "clmtrackrIteration",
-      function (event) {
+      function(event) {
         stats.update();
       },
       false
@@ -123,7 +120,7 @@ export default {
       //周波数ごとの振幅を取得して配列に格納
       this.analyser.getByteFrequencyData(this.frequencies);
       return (
-        this.frequencies.reduce(function (previous, current) {
+        this.frequencies.reduce(function(previous, current) {
           return previous + current;
         }) / this.analyser.frequencyBinCount
       );
@@ -169,43 +166,60 @@ export default {
         this.isTracking = false;
       }
     },
+    //初期設定
+    Initial_Tilit(event) {
+      let centerValue = 0.9;//顔が正面のときのxDeg値
+      let yParam = 1.6;//中央のときのatan2の値 
+
+      //X軸方向の傾き
+      let tops = ((event[0][1] + event[14][1]) / 2);
+      let bottoms = ((event[6][1] + event[8][1]) / 2);
+      let middle = bottoms + ((tops - bottoms) / 2);
+      center_x = Math.floor(((centerValue - (event[37][1] / middle)) / 0.2 * Math.PI / 2)*100)/100;
+      //Y軸方向の傾き
+      center_y=-Math.atan((event[33][0]-((event[25][0]+event[30][0])/2))/((event[14][0]-event[0][0])/2))*4;
+      //Z軸方向の傾き
+      center_z=Math.PI / 2 - Math.atan2(event[62][1] - event[33][1], event[62][0] - event[33][0]);
+      nose_length=Math.sqrt(Math.pow((event[33][0]-event[62][0]),2)+Math.pow((event[33][1]-event[62][1]),2));
+      nose_length2=nose_length;
+      return ;
+    },
     mapEventTo3dTransforms(event) {
       //2次元座標から3次元の傾きを取得
       //全体的に微妙なところがある
       if (event) {
-        // X軸方向の傾き
-        let tops = (event[0][1] + event[14][1]) / 2;
-        let bottoms = (event[6][1] + event[8][1]) / 2;
-        let middle = bottoms + (tops - bottoms) / 2;
-        let centerValue = 0.9; //顔が正面のときのxDeg値
-        let xDeg =
-          (((centerValue - event[37][1] / middle) / 0.2) * Math.PI) / 2;
-        //console.log(xDeg);
-        // Y軸方向の傾き
-        var t2 = event[62],
-          t1 = [
-            (event[13][0] - event[1][0]) / 2,
-            (event[13][1] - event[1][1]) / 2,
-          ];
-        let yParam = 1.6; //中央のときのatan2の値
-        var yDeg =
-          (((Math.atan2(
-            event[33][1] - event[7][1],
-            event[33][0] - event[7][0]
-          ) +
-            yParam) /
-            0.1) *
-            Math.PI) /
-          6;
-        // Z軸方向の傾き
-        let zDeg =
-          Math.PI / 2 -
-          Math.atan2(event[62][1] - event[33][1], event[62][0] - event[33][0]);
-        return {
-          x: xDeg,
-          y: yDeg,
-          z: zDeg,
-        };
+        //現在の鼻の長さ
+        let scale=Math.sqrt(Math.pow((event[33][0]-event[62][0]),2)+Math.pow((event[33][1]-event[62][1]),2));
+        //どのくらいの距離移動したか
+        let scaler=Math.sqrt(Math.pow((event[62][0]-bigin_x),2)+Math.pow((event[62][1]-bigin_y),2));
+        if((90>=scaler)&&(Math.abs(scale)<=(nose_length2+0.7))){
+          nose_length2=scale;
+          // X軸方向の傾き
+          let tops = (event[0][1] + event[14][1]) / 2;
+          let bottoms = (event[6][1] + event[8][1]) / 2;
+          let middle = bottoms + (tops - bottoms) / 2;
+          let centerValue = 0.9; //顔が正面のときのxDeg値
+          let xDeg =
+            ((((centerValue - event[37][1] / middle) / 0.2) * Math.PI) / 2)-center_x;
+          //console.log(xDeg);
+          // Y軸方向の傾き
+          let yDeg=-Math.atan((event[33][0]-((event[25][0]+event[30][0])/2))/((event[14][0]-event[0][0])/2))*4-center_y;
+          // Z軸方向の傾き
+          let zDeg = Math.atan((event[27][1]-event[33][1])/(event[32][0]-event[27][0]))*1.5-center_z;
+          return {
+            x: xDeg,
+            y: yDeg,
+            z: zDeg
+          };
+        }
+        else{
+          nose_length2=nose_length;  
+          return {
+           x: 0,
+            y: 0,
+            z: 0
+         };
+        } 
       }
     },
     limiter(axis) {
@@ -249,7 +263,7 @@ export default {
       return {
         x: x,
         y: y,
-        z: z,
+        z: z
       };
     },
     getMovingAverage(axis) {
@@ -267,6 +281,8 @@ export default {
         averageAxis.x /= stack.length;
         averageAxis.y /= stack.length;
         averageAxis.z /= stack.length;
+        stack.pop();
+        stack.push(averageAxis);
         return averageAxis;
       } else {
         return axis;
@@ -281,7 +297,7 @@ export default {
       if (axis.y < -limit / 2) axis.y = -limit / 2;
       if (axis.z < -limit) axis.z = -limit;
       return axis;
-    },
-  },
+    }
+  }
 };
 </script>
