@@ -188,6 +188,9 @@ export default {
       //2次元座標から3次元の傾きを取得
       //全体的に微妙なところがある
       if (event) {
+        let bigin_x=230;
+        let bigin_y=200;
+
         //現在の鼻の長さ
         let scale=Math.sqrt(Math.pow((event[33][0]-event[62][0]),2)+Math.pow((event[33][1]-event[62][1]),2));
         //どのくらいの距離移動したか
