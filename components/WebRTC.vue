@@ -1,25 +1,34 @@
 <template>
   <div id="webrtc">
     <div class="row" id="remoteStream">
-      <Video v-for="stream in remoteStreams"
-             autoplay
-             :stream="stream.stream"
-             :peerId="stream.peerId"
-             v-on:focused="focus"
-      >
-      </Video>
+      <Video
+        v-for="(stream,key) in remoteStreams"
+        autoplay
+        :key="key"
+        :stream="stream.stream"
+        :peerId="stream.peerId"
+        v-on:focused="focus"
+      ></Video>
     </div>
-    <video width="360" height="270" class="pt-1" :srcObject.prop="focusVideo.stream" loop playsinline autoplay></video>
+    <video
+      width="360"
+      height="270"
+      class="pt-1"
+      :srcObject.prop="focusVideo.stream"
+      loop
+      playsinline
+      autoplay
+    ></video>
   </div>
 </template>
 <style>
-#remoteStream{
+#remoteStream {
   background: gray;
-  width:480px;
+  width: 480px;
   height: 210px;
   padding: 10px;
   margin: 0 auto;
-  overflow:auto;
+  overflow: auto;
 }
 </style>
 <script>
@@ -28,7 +37,7 @@ import Video from "~/components/Video.vue";
 
 export default {
   components: {
-    Video
+    Video,
   },
   data: () => {
     return {
@@ -39,7 +48,7 @@ export default {
       room: "",
       messages: "",
       displayStream: "",
-      focusVideo: ""
+      focusVideo: "",
     };
   },
   props: ["localStream", "audioTrack"],
@@ -57,7 +66,7 @@ export default {
       if (!this.roomName) {
         return;
       }
-      if (this.audioTrack !== -1) this.localStream.addTrack(this.audioTrack);
+      if (this.audioTrack > 0) this.localStream.addTrack(this.audioTrack);
       this.room = this.peer.joinRoom(this.roomName, {
         mode: "sfu",
         stream: this.localStream,
@@ -79,14 +88,16 @@ export default {
           this.connectedPeers.push(stream.peerId);
           this.remoteStreams.push({
             peerId: stream.peerId,
-            stream: stream
+            stream: stream,
           });
         }
       });
       this.room.on("peerLeave", (peerId) => {
         this.$toast.show(`${peerId} が退室しました`);
         this.connectedPeers = this.connectedPeers.filter((id) => id !== peerId);
-        this.remoteStreams = this.remoteStreams.filter(stream => stream.peerId !== peerId);
+        this.remoteStreams = this.remoteStreams.filter(
+          (stream) => stream.peerId !== peerId
+        );
         if (peerId === this.focusVideo.peerId) this.focusVideo = "";
       });
     },
@@ -112,11 +123,11 @@ export default {
       this.remoteStreams = [];
       this.room.close();
       this.$toast.show(`退室しました`);
-      this.focusVideo="";
+      this.focusVideo = "";
     },
     focus(data) {
       this.focusVideo = data;
-    }
+    },
   },
 };
 </script>

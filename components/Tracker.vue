@@ -16,20 +16,15 @@
   -o-transform: scaleX(-1);
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
-  -ms-filter: fliph; /*IE*/
-  filter: fliph; /*IE*/
 }
 #camera {
   -o-transform: scaleX(-1);
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
-  -ms-filter: fliph; /*IE*/
-  filter: fliph; /*IE*/
 }
 #container {
   position: relative;
   width: 370px;
-  /*margin : 0px auto;*/
 }
 </style>
 <script>
@@ -38,8 +33,8 @@ import Stats from "stats.js";
 
 const ctrack = new clm.tracker({
   faceDetection: {
-    useWebWorkers: false
-  }
+    useWebWorkers: false,
+  },
 });
 
 export default {
@@ -58,7 +53,8 @@ export default {
       volume,
       isTracking,
       nose_length,
-      nose_length2;
+      nose_length2,
+      isCameraEnable;
     return {
       render,
       tracker,
@@ -73,7 +69,8 @@ export default {
       volume,
       isTracking,
       nose_length,
-      nose_length2
+      nose_length2,
+      isCameraEnable,
     };
   },
   async mounted() {
@@ -85,42 +82,46 @@ export default {
     this.isTracking = false;
     this.drawLoop();
 
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true
-    });
-
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    var context = new AudioContext();
-    this.analyser = context.createAnalyser();
-    this.frequencies = new Uint8Array(this.analyser.frequencyBinCount);
-    window.hackForMozzila = stream;
-    await context.createMediaStreamSource(stream).connect(this.analyser);
-    this.$emit("getAudioTrack", stream.getAudioTracks()[0]);
-
-    this.vid.muted = true;
-    this.vid.srcObject = stream;
-    await this.vid.play();
-    ctrack.init();
-
     //fpsモニタリング用
     const stats = new Stats();
     document.body.appendChild(stats.domElement);
     // update stats on every iteration
     document.addEventListener(
       "clmtrackrIteration",
-      function(event) {
+      function (event) {
         stats.update();
       },
       false
     );
   },
   methods: {
+    async startCamera() {
+      const stream = await navigator.mediaDevices
+        .getUserMedia({
+          video: true,
+          audio: true,
+        })
+        .catch(() => {
+          alert("カメラが接続されていません");
+        });
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      let context = new AudioContext();
+      this.analyser = context.createAnalyser();
+      this.frequencies = new Uint8Array(this.analyser.frequencyBinCount);
+      window.hackForMozzila = stream;
+      await context.createMediaStreamSource(stream).connect(this.analyser);
+      this.$emit("getAudioTrack", stream.getAudioTracks()[0]);
+
+      this.vid.muted = true;
+      this.vid.srcObject = stream;
+      await this.vid.play();
+      ctrack.init();
+    },
     getFrequency() {
       //周波数ごとの振幅を取得して配列に格納
       this.analyser.getByteFrequencyData(this.frequencies);
       return (
-        this.frequencies.reduce(function(previous, current) {
+        this.frequencies.reduce(function (previous, current) {
           return previous + current;
         }) / this.analyser.frequencyBinCount
       );
@@ -169,7 +170,7 @@ export default {
     //初期設定:コメントアウト後で外す
     /*Initial_Tilit(event) {
       let centerValue = 0.9;//顔が正面のときのxDeg値
-      let yParam = 1.6;//中央のときのatan2の値 
+      let yParam = 1.6;//中央のときのatan2の値
 
       //X軸方向の傾き
       let tops = ((event[0][1] + event[14][1]) / 2);
@@ -198,27 +199,34 @@ export default {
         let scaler=Math.sqrt(Math.pow((event[62][0]-bigin_x),2)+Math.pow((event[62][1]-bigin_y),2));
         if((90>=scaler)&&(Math.abs(scale)<=(nose_length2+0.7))){
           nose_length2=scale;*/
-          // X軸方向の傾き
-          let tops = (event[0][1] + event[14][1]) / 2;
-          let bottoms = (event[6][1] + event[8][1]) / 2;
-          let middle = bottoms + (tops - bottoms) / 2;
-          let centerValue = 0.9; //顔が正面のときのxDeg値
-          let xDeg =
-            ((((centerValue - event[37][1] / middle) / 0.2) * Math.PI) / 2);//-center_x;
-          //console.log(xDeg);
-          // Y軸方向の傾き
-          let yDeg=-Math.atan((event[33][0]-((event[25][0]+event[30][0])/2))/((event[14][0]-event[0][0])/2))*4;//-center_y;
-          // Z軸方向の傾き
-          let zDeg = Math.atan((event[27][1]-event[33][1])/(event[32][0]-event[27][0]))*1.5;//-center_z;
-          return {
-            x: xDeg,
-            y: yDeg,
-            z: zDeg
-          };
+        // X軸方向の傾き
+        let tops = (event[0][1] + event[14][1]) / 2;
+        let bottoms = (event[6][1] + event[8][1]) / 2;
+        let middle = bottoms + (tops - bottoms) / 2;
+        let centerValue = 0.9; //顔が正面のときのxDeg値
+        let xDeg =
+          (((centerValue - event[37][1] / middle) / 0.2) * Math.PI) / 2; //-center_x;
+        //console.log(xDeg);
+        // Y軸方向の傾き
+        let yDeg =
+          -Math.atan(
+            (event[33][0] - (event[25][0] + event[30][0]) / 2) /
+              ((event[14][0] - event[0][0]) / 2)
+          ) * 4; //-center_y;
+        // Z軸方向の傾き
+        let zDeg =
+          Math.atan(
+            (event[27][1] - event[33][1]) / (event[32][0] - event[27][0])
+          ) * 1.5; //-center_z;
+        return {
+          x: xDeg,
+          y: yDeg,
+          z: zDeg,
+        };
         //コメントアウト後で外す
         /*}
         else{
-          nose_length2=nose_length;  
+          nose_length2=nose_length;
           return {
            x: 0,
             y: 0,
@@ -268,7 +276,7 @@ export default {
       return {
         x: x,
         y: y,
-        z: z
+        z: z,
       };
     },
     getMovingAverage(axis) {
@@ -302,7 +310,7 @@ export default {
       if (axis.y < -limit / 2) axis.y = -limit / 2;
       if (axis.z < -limit) axis.z = -limit;
       return axis;
-    }
-  }
+    },
+  },
 };
 </script>

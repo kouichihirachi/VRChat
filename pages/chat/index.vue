@@ -2,6 +2,7 @@
   <div class="container-fluid background">
     <div class="container">
       <setting
+        ref="Setting"
         :localStream="localStream"
         v-if="viewFlag"
         @close="closeWindows"
@@ -14,7 +15,12 @@
             <tracker ref="Tracker" @axis="axis" @getAudioTrack="getAudioTrack" class="mt-3 mb-3"></tracker>
           </div>
           <div class="row">
-            <vrm ref="Vrm" @getStream="getStream" @getTrack="getTrack" />
+            <vrm
+              ref="Vrm"
+              @getStream="getStream"
+              @getTrack="getTrack"
+              @finishLoading="finishLoading"
+            />
           </div>
           <div class="row">
             <div class="jumbotron mt-3 pt-3 pb-3 bg-light">
@@ -31,6 +37,9 @@
                 <font-awesome-icon v-if="!isMuted" icon="volume-off" />
               </button>
               <button @click="mirror" class="btn btn-info">
+                <font-awesome-icon icon="desktop" />
+              </button>
+              <button @click="startCamera" class="btn btn-info">
                 <font-awesome-icon icon="desktop" />
               </button>
             </div>
@@ -92,7 +101,7 @@ export default {
       viewFlag: true,
       isTracking: false,
       isConnected: false,
-      isMuted: false
+      isMuted: false,
     };
   },
   mounted() {},
@@ -147,7 +156,13 @@ export default {
     },
     axis(axis) {
       this.$refs.Vrm.ChangeVrm(axis);
-    }
-  }
+    },
+    startCamera() {
+      this.$refs.Tracker.startCamera();
+    },
+    finishLoading() {
+      this.$refs.Setting.changeStatus();
+    },
+  },
 };
 </script>

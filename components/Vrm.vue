@@ -138,6 +138,7 @@ export default {
             return vrm.humanoid.getBoneNode(boneName);
           });
           console.log(bones);
+          this.$emit("finishLoading");
         });
       });
       this.renderer.render(this.scene, this.camera);

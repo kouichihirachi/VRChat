@@ -7,7 +7,13 @@
         <div class="col">
           <div class="form-group">
             <label for="modelSelect">モデル：</label>
-            <select id="modelSelect" v-model="modelName" @change="changeModel(modelName)" class="form-control">
+            <select
+              id="modelSelect"
+              v-bind:disabled="isLoading"
+              v-model="modelName"
+              @change="changeModel(modelName)"
+              class="form-control"
+            >
               <option disabled>選択してください</option>
               <option value="JK.vrm" selected="selected">JK</option>
               <option value="sabaru.vrm">サーバルちゃん</option>
@@ -18,7 +24,12 @@
           </div>
           <div class="form-group">
             <label for="backgroundSelect">背景色：</label>
-            <select id="backgroundSelect" v-model="color" @change="changeBackground(color)" class="form-control">
+            <select
+              id="backgroundSelect"
+              v-model="color"
+              @change="changeBackground(color)"
+              class="form-control"
+            >
               <option disabled>選択してください</option>
               <option value="0xffebcd" selected="selected">ベージュ</option>
               <option value="0x9cbb1c">黄緑</option>
@@ -42,7 +53,8 @@ export default {
   data() {
     return {
       color: "",
-      modelName: ""
+      modelName: "",
+      isLoading: false,
     };
   },
   methods: {
@@ -50,14 +62,18 @@ export default {
       this.$emit("close");
     },
     changeModel(modelName) {
+      this.isLoading = true;
       this.modelName = modelName;
       this.$emit("changeModel", modelName);
     },
     changeBackground(color) {
       this.color = color;
       this.$emit("changeBackground", color);
-    }
-  }
+    },
+    changeStatus() {
+      this.isLoading = false;
+    },
+  },
 };
 </script>
 <style>
