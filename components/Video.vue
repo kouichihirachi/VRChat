@@ -27,6 +27,6 @@ export default {
 <style scoped>
 video {
   border: solid 2px black;
-  background: gray;
+  background: rgb(241, 0, 0);
 }
 </style>

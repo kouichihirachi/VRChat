@@ -49,6 +49,7 @@
   </div>
 </template>
 <script>
+
 export default {
   data() {
     return {
@@ -77,6 +78,7 @@ export default {
 };
 </script>
 <style>
+
 #overlay {
   position: fixed;
   left: 0;
@@ -99,5 +101,10 @@ export default {
   padding: 32px;
   border-radius: 8px;
   background-color: #fff;
+  border-radius: 10px;
+  background:rgba(255,255,255,0.5);
+  border: double 6px #58ffff44;
+  box-shadow: 8px 15px 40px #1a251a65 inset;
+  font-size:2vw;
 }
 </style>
