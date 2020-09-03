@@ -3,7 +3,7 @@
     <!-- カメラ表示 -->
     <div id="container">
       <video id="camera" ref="camera" width="240" height="180" loop playsinline autoplay>
-        <!-- <source src="~assets/test.mp4" /> -->
+        <source src="~assets/test.mp4" />
       </video>
       <canvas ref="cameraOverlay" id="cameraOverlay" width="240" height="180"></canvas>
       <!-- {{volume}} -->
@@ -89,6 +89,7 @@ export default {
     this.vidHeight = this.vid.height;
     this.isTracking = false;
     this.drawLoop();
+    ctrack.init();
 
     //fpsモニタリング用
     const stats = new Stats();
@@ -123,12 +124,9 @@ export default {
       await context.createMediaStreamSource(stream).connect(this.analyser);
       this.$emit("getAudioTrack", stream.getAudioTracks()[0]);
 
-      //this.vid = this.$refs.camera;
-
       this.vid.muted = true;
       this.vid.srcObject = stream;
       await this.vid.play();
-      ctrack.init();
     },
     getFrequency() {
       //周波数ごとの振幅を取得して配列に格納
@@ -157,7 +155,6 @@ export default {
           axis = this.maximumLimiter(axis);
           axis = this.limiter(axis);
           axis = this.getMovingAverage(axis);
-          console.log(axis);
         }
       }
 
