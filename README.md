@@ -2,21 +2,21 @@
 
 > VRChat System
 
-## Build Setup
+## セットアップ
 
 ```bash
-# install dependencies
+# 必要なパッケージをインストール
 $ yarn install
 
-# serve with hot reload at localhost:3000
+# 開発用サーバを3000番で開く
 $ yarn dev
 
-# build for production and launch server
+# リリースビルドして起動する
 $ yarn build
 $ yarn start
 
-# generate static project
+# 静的サイトを生成する
 $ yarn generate
 ```
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+詳細は [Nuxt.js docs](https://nuxtjs.org) を参照
