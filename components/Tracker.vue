@@ -326,7 +326,7 @@ export default {
       //5回分の移動平均を取り，なめらかにする
       let averageAxis = { x: 0, y: 0, z: 0 };
 
-      if (this.stack.length > 10) {
+      if (this.stack.length > 5) {
         this.stack.shift();
         this.stack.push(axis);
         for (let i = 0; i < this.stack.length; i++) {
