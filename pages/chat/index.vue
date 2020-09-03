@@ -42,6 +42,9 @@
               <button @click="startCamera" class="btn btn-info">
                 <font-awesome-icon icon="desktop" />
               </button>
+              <button @click="initializePosition" class="btn btn-danger">
+                <font-awesome-icon icon="desktop" />
+              </button>
             </div>
           </div>
         </div>
@@ -163,6 +166,9 @@ export default {
     finishLoading() {
       this.$refs.Setting.changeStatus();
     },
+    initializePosition(){
+      this.$refs.Tracker.Initial_Tilit();
+    }
   },
 };
 </script>

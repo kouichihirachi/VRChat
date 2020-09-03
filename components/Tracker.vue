@@ -2,7 +2,9 @@
   <div id="Tracker">
     <!-- カメラ表示 -->
     <div id="container">
-      <video id="camera" ref="camera" width="240" height="180" loop playsinline autoplay></video>
+      <video id="camera" ref="camera" width="240" height="180" loop playsinline autoplay>
+        <!-- <source src="~assets/test.mp4" /> -->
+      </video>
       <canvas ref="cameraOverlay" id="cameraOverlay" width="240" height="180"></canvas>
       <!-- {{volume}} -->
     </div>
@@ -54,6 +56,9 @@ export default {
       isTracking,
       nose_length,
       nose_length2,
+      center_x,
+      center_y,
+      center_z,
       isCameraEnable;
     return {
       render,
@@ -70,6 +75,9 @@ export default {
       isTracking,
       nose_length,
       nose_length2,
+      center_x,
+      center_y,
+      center_z,
       isCameraEnable,
     };
   },
@@ -93,6 +101,8 @@ export default {
       },
       false
     );
+
+    this.stack = [];
   },
   methods: {
     async startCamera() {
@@ -104,6 +114,7 @@ export default {
         .catch(() => {
           alert("カメラが接続されていません");
         });
+
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       let context = new AudioContext();
       this.analyser = context.createAnalyser();
@@ -111,6 +122,8 @@ export default {
       window.hackForMozzila = stream;
       await context.createMediaStreamSource(stream).connect(this.analyser);
       this.$emit("getAudioTrack", stream.getAudioTracks()[0]);
+
+      //this.vid = this.$refs.camera;
 
       this.vid.muted = true;
       this.vid.srcObject = stream;
@@ -134,11 +147,18 @@ export default {
 
       if (ctrack.getCurrentPosition() && this.isTracking) {
         let event = ctrack.getCurrentPosition();
-        axis = this.mapEventTo3dTransforms(event);
-        axis = this.maximumLimiter(axis);
-        axis = this.limiter(axis);
-        axis = this.getMovingAverage(axis);
         ctrack.draw(this.overlay);
+        if (
+          this.center_x != null &&
+          this.center_y != null &&
+          this.center_z != null
+        ) {
+          axis = this.mapEventTo3dTransforms(event);
+          axis = this.maximumLimiter(axis);
+          axis = this.limiter(axis);
+          axis = this.getMovingAverage(axis);
+          console.log(axis);
+        }
       }
 
       //口の動き
@@ -168,71 +188,94 @@ export default {
       }
     },
     //初期設定:コメントアウト後で外す
-    /*Initial_Tilit(event) {
-      let centerValue = 0.9;//顔が正面のときのxDeg値
-      let yParam = 1.6;//中央のときのatan2の値
+    Initial_Tilit() {
+      if (ctrack.getCurrentPosition() && this.isTracking) {
+        console.log("why");
+        let event = ctrack.getCurrentPosition();
+        let centerValue = 0.9; //顔が正面のときのxDeg値
+        let yParam = 1.6; //中央のときのatan2の値
 
-      //X軸方向の傾き
-      let tops = ((event[0][1] + event[14][1]) / 2);
-      let bottoms = ((event[6][1] + event[8][1]) / 2);
-      let middle = bottoms + ((tops - bottoms) / 2);
-      center_x = Math.floor(((centerValue - (event[37][1] / middle)) / 0.2 * Math.PI / 2)*100)/100;
-      //Y軸方向の傾き
-      center_y=-Math.atan((event[33][0]-((event[25][0]+event[30][0])/2))/((event[14][0]-event[0][0])/2))*4;
-      //Z軸方向の傾き
-      center_z=Math.PI / 2 - Math.atan2(event[62][1] - event[33][1], event[62][0] - event[33][0]);
-      nose_length=Math.sqrt(Math.pow((event[33][0]-event[62][0]),2)+Math.pow((event[33][1]-event[62][1]),2));
-      nose_length2=nose_length;
-      return ;
-    },*/
+        //X軸方向の傾き
+        let tops = (event[0][1] + event[14][1]) / 2;
+        let bottoms = (event[6][1] + event[8][1]) / 2;
+        let middle = bottoms + (tops - bottoms) / 2;
+        this.center_x =
+          Math.floor(
+            ((((centerValue - event[37][1] / middle) / 0.2) * Math.PI) / 2) *
+              100
+          ) / 100;
+        //Y軸方向の傾き
+        this.center_y =
+          Math.floor(
+            -Math.atan(
+              (event[33][0] - (event[25][0] + event[30][0]) / 2) /
+                ((event[14][0] - event[0][0]) / 2)
+            ) *
+              4 *
+              100
+          ) / 100;
+        //Z軸方向の傾き
+        this.center_z =
+          Math.floor(
+            Math.atan(
+              (event[27][1] - event[32][1]) / (event[32][0] - event[27][0])
+            ) *
+              1.5 *
+              100
+          ) / 100;
+
+        return;
+      }
+    },
     mapEventTo3dTransforms(event) {
       //2次元座標から3次元の傾きを取得
       //全体的に微妙なところがある
       if (event) {
         //コメントアウト後で外す
-        /*let bigin_x=230;
-        let bigin_y=200;
 
         //現在の鼻の長さ
-        let scale=Math.sqrt(Math.pow((event[33][0]-event[62][0]),2)+Math.pow((event[33][1]-event[62][1]),2));
+
         //どのくらいの距離移動したか
-        let scaler=Math.sqrt(Math.pow((event[62][0]-bigin_x),2)+Math.pow((event[62][1]-bigin_y),2));
-        if((90>=scaler)&&(Math.abs(scale)<=(nose_length2+0.7))){
-          nose_length2=scale;*/
-        // X軸方向の傾き
+
         let tops = (event[0][1] + event[14][1]) / 2;
         let bottoms = (event[6][1] + event[8][1]) / 2;
         let middle = bottoms + (tops - bottoms) / 2;
         let centerValue = 0.9; //顔が正面のときのxDeg値
         let xDeg =
-          (((centerValue - event[37][1] / middle) / 0.2) * Math.PI) / 2; //-center_x;
-        //console.log(xDeg);
+          (((centerValue - event[37][1] / middle) / 0.2) * Math.PI) / 2 -
+          this.center_x;
+
         // Y軸方向の傾き
         let yDeg =
           -Math.atan(
             (event[33][0] - (event[25][0] + event[30][0]) / 2) /
               ((event[14][0] - event[0][0]) / 2)
-          ) * 4; //-center_y;
+          ) *
+            4 -
+          this.center_y;
         // Z軸方向の傾き
         let zDeg =
           Math.atan(
-            (event[27][1] - event[33][1]) / (event[32][0] - event[27][0])
-          ) * 1.5; //-center_z;
+            (event[27][1] - event[32][1]) / (event[32][0] - event[27][0])
+          ) *
+            1.5 -
+          this.center_z;
+        //console.log(zDeg);
         return {
           x: xDeg,
           y: yDeg,
           z: zDeg,
         };
         //コメントアウト後で外す
-        /*}
-        else{
-          nose_length2=nose_length;
+        /*
+        } else {
+          this.nose_length2 = this.nose_length;
           return {
-           x: 0,
+            x: 0,
             y: 0,
-            z: 0
-         };
-        } */
+            z: 0,
+          };
+        }*/
       }
     },
     limiter(axis) {
@@ -281,23 +324,24 @@ export default {
     },
     getMovingAverage(axis) {
       //5回分の移動平均を取り，なめらかにする
-      this.stack = [];
       let averageAxis = { x: 0, y: 0, z: 0 };
+
       if (this.stack.length > 10) {
         this.stack.shift();
         this.stack.push(axis);
         for (let i = 0; i < this.stack.length; i++) {
-          averageAxis.x += stack[i].x;
-          averageAxis.y += stack[i].y;
-          averageAxis.z += stack[i].z;
+          averageAxis.x += this.stack[i].x;
+          averageAxis.y += this.stack[i].y;
+          averageAxis.z += this.stack[i].z;
         }
-        averageAxis.x /= stack.length;
-        averageAxis.y /= stack.length;
-        averageAxis.z /= stack.length;
-        stack.pop();
-        stack.push(averageAxis);
+        averageAxis.x /= this.stack.length;
+        averageAxis.y /= this.stack.length;
+        averageAxis.z /= this.stack.length;
+        this.stack.pop();
+        this.stack.push(averageAxis);
         return averageAxis;
       } else {
+        this.stack.push(axis);
         return axis;
       }
     },
