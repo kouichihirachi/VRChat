@@ -193,7 +193,10 @@ export default {
         const blinkVal =
           Math.sin((this.clock.elapsedTime * 1) / 3) ** 1024 +
           Math.sin((this.clock.elapsedTime * 4) / 7) ** 1024;
-
+        this.currentVrm.blendShapeProxy.setValue(
+          VRMSchema.BlendShapePresetName.Fun,
+          Math.sin(this.clock.elapsedTime)
+        );
         this.currentVrm.blendShapeProxy.setValue(
           VRMSchema.BlendShapePresetName.Blink,
           blinkVal
