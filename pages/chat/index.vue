@@ -60,7 +60,7 @@
   position: relative;
   height: 100vh;
   min-height: 300px;
-  background-image: url("~assets/img/background.jpg");
+  background-image: url("~assets/img/syber.jpeg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -166,9 +166,9 @@ export default {
     finishLoading() {
       this.$refs.Setting.changeStatus();
     },
-    initializePosition(){
+    initializePosition() {
       this.$refs.Tracker.Initial_Tilit();
-    }
+    },
   },
 };
 </script>
