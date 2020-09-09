@@ -9,7 +9,7 @@
               <span>V</span>会議
             </h1>
             <p class="text-muted">Make Your Conference More Fun!</p>
-          </div>
+          </div class="text-explain">
           <hr />V会議はあなたがバーチャルアバターで
           <br />会議に参加できる新しいWeb会議システム
           <hr />
@@ -51,16 +51,19 @@
 }
 
 .text-center h1 {
-  /*font-size: 8vw;*/
+  font-size: 4rem;
   text-shadow: 6px 3px 5px silver;
   font-family: "Yu Mincho";
   font-weight: bold;
 }
 .text-center span {
-  /*font-size: 14vw;*/
+  font-size: 7rem;
   font-family: "BIZ UDP明朝";
   font-weight: Bold;
   font-style: italic;
+}
+.text-explain{
+ font-size: 1.8rem; 
 }
 
 .background {
