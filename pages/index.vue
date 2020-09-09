@@ -51,19 +51,22 @@
 }
 
 .text-center h1 {
-  font-size: 4rem;
+  font-size: 3rem;
   text-shadow: 6px 3px 5px silver;
   font-family: "Yu Mincho";
   font-weight: bold;
 }
 .text-center span {
-  font-size: 7rem;
+  font-size: 5.5rem;
   font-family: "BIZ UDP明朝";
   font-weight: Bold;
   font-style: italic;
 }
+.text-muted{
+  font-size: 1.1rem;
+}
 .text-explain{
- font-size: 1.8rem; 
+  font-size: 1.6rem; 
 }
 
 .background {
