@@ -37,20 +37,19 @@
 </template>
 <style>
 .Mainbox {
-  margin: auto;
-  margin-top: 5em;
+  position:absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform : translate(-50%,-50%);
+  transform : translate(-50%,-50%);
+  width: 25rem;
   text-align: center;
-  width: 70%;
-  max-width: 500px;
-  padding: 20px 50px;
-  border-radius: 10px;
+  padding: 1.5rem 2rem;
   background: rgba(255, 255, 255, 0.5);
   border: double 6px #58ffff44;
+  border-radius: 10px;
   box-shadow: 8px 15px 40px #1a251a65 inset;
-  scroll-behavior:auto;
-  /*font-size: 2vw;*/
 }
-
 .text-center h1 {
   font-size: 3rem;
   text-shadow: 6px 3px 5px silver;
@@ -69,7 +68,6 @@
 .text-explain{
   font-size: 1.6rem; 
 }
-
 .background {
   position: relative;
   height: 100vh;
