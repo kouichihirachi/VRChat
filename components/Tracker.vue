@@ -143,18 +143,11 @@ export default {
     },
     drawLoop() {
       requestAnimationFrame(this.drawLoop);
-
-      let axis = {};
-
       this.overlayCC.clearRect(0, 0, this.vidWidth, this.vidHeight);
-      var positions = ctrack.getCurrentPosition(); // 顔部品の現在位置の取得
-      var parameters = ctrack.getCurrentParameters(); // ★現在の顔のパラメータを取得
-      var emotion = classifier.meanPredict(parameters); // ★そのパラメータから感情を推定して emotion に結果を入れる
-      axis.emotion = emotion;
-      console.log(emotion);
-
-      if (ctrack.getCurrentPosition() && this.isTracking) {
-        let event = ctrack.getCurrentPosition();
+      let axis = {};
+      const CurrentPosition = ctrack.getCurrentPosition();
+      if (CurrentPosition && this.isTracking) {
+        let event = CurrentPosition;
         ctrack.draw(this.overlay);
         if (
           this.center_x != null &&
@@ -166,6 +159,11 @@ export default {
           axis = this.limiter(axis);
           axis = this.getMovingAverage(axis);
         }
+
+        //表情認識
+        var parameters = ctrack.getCurrentParameters(); // ★現在の顔のパラメータを取得
+        var emotion = classifier.meanPredict(parameters); // ★そのパラメータから感情を推定して emotion に結果を入れる
+        axis.emotion = emotion ? emotion : undefined;
       }
 
       //口の動き
@@ -197,7 +195,7 @@ export default {
     //初期設定:コメントアウト後で外す
     Initial_Tilit() {
       if (ctrack.getCurrentPosition() && this.isTracking) {
-        console.log("why");
+        //console.log("why");
         let event = ctrack.getCurrentPosition();
         let centerValue = 0.9; //顔が正面のときのxDeg値
         let yParam = 1.6; //中央のときのatan2の値

@@ -137,7 +137,7 @@ export default {
           const bones = [VRMSchema.HumanoidBoneName.Neck].map((boneName) => {
             return vrm.humanoid.getBoneNode(boneName);
           });
-          console.log(bones);
+          //console.log(bones);
           this.$emit("finishLoading");
         });
       });
@@ -168,7 +168,7 @@ export default {
           const Bone = Animation[i].Bone;
           const now = Bone;
           const diff = target - now;
-          console.log(diff);
+          //console.log(diff);
           if (diff > 0) {
             finished = false;
             this.currentVrm.humanoid.getBoneNode(
@@ -189,37 +189,14 @@ export default {
         const canvas = this.renderer.domElement;
         this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
 
-        if (this.isAnimate) this.Animate();
-        if (axis.emotion) {
-          const emotion = axis.emotion;
-          this.currentVrm.blendShapeProxy.setValue(
-            VRMSchema.BlendShapePresetName.Fun,
-            emotion.happy * 2
-          );
-          this.currentVrm.blendShapeProxy.setValue(
-            VRMSchema.BlendShapePresetName.Sorrow,
-            emotion.sad
-          );
-          this.currentVrm.blendShapeProxy.setValue(
-            VRMSchema.BlendShapePresetName.Angry,
-            emotion.angry
-          );
-          this.currentVrm.blendShapeProxy.setValue(
-            VRMSchema.BlendShapePresetName.Joy,
-            emotion.surprised
-          );
-        }
         const blinkVal =
           Math.sin((this.clock.elapsedTime * 1) / 3) ** 1024 +
           Math.sin((this.clock.elapsedTime * 4) / 7) ** 1024;
         this.currentVrm.blendShapeProxy.setValue(
-          VRMSchema.BlendShapePresetName.Fun,
-          Math.sin(this.clock.elapsedTime)
-        );
-        this.currentVrm.blendShapeProxy.setValue(
           VRMSchema.BlendShapePresetName.Blink,
           blinkVal
         );
+        if (this.isAnimate) this.Animate();
       }
       // 基本的にはこの関数内を変えれば良い
       // TODO
@@ -244,6 +221,21 @@ export default {
           this.currentVrm.humanoid.getBoneNode(
             VRMSchema.HumanoidBoneName.Neck
           ).rotation.z = axis.z;
+        }
+        if (axis.emotion != undefined) {
+          this.currentVrm.blendShapeProxy.setValue(
+            VRMSchema.BlendShapePresetName.Fun,
+            axis.emotion[5].value
+          );
+
+          this.currentVrm.blendShapeProxy.setValue(
+            VRMSchema.BlendShapePresetName.Sorrow,
+            axis.emotion[3].value
+          );
+          this.currentVrm.blendShapeProxy.setValue(
+            VRMSchema.BlendShapePresetName.Angry,
+            axis.emotion[0].value
+          );
         }
         this.currentVrm.update(deltaTime);
       }
