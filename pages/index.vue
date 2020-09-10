@@ -42,14 +42,20 @@
   text-align: center;
   width: 70%;
   max-width: 500px;
-  padding: 20px 50px;
+   padding: 20px 50px;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.5);
   border: double 6px #58ffff44;
   box-shadow: 8px 15px 40px #1a251a65 inset;
-  scroll-behavior:auto;
+  height: 30em;     
+  overflow: auto;  
+  -ms-overflow-style: none; 
+  
   /*font-size: 2vw;*/
 }
+/*.row{
+  background:red;
+}*/
 
 .text-center h1 {
   font-size: 3rem;
