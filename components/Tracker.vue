@@ -31,6 +31,7 @@
 </style>
 <script>
 import clm from "clmtrackr";
+import emotionClassifier from "./emotionClassifier.js";
 import Stats from "stats.js";
 
 const ctrack = new clm.tracker({
@@ -38,6 +39,9 @@ const ctrack = new clm.tracker({
     useWebWorkers: false,
   },
 });
+
+var classifier = new emotionClassifier(); // ★emotionClassifier オブジェクトを作成
+classifier.init(); // ★classifier を所定の感情モデル（※2）で初期化
 
 export default {
   name: "Tracker",
@@ -139,9 +143,15 @@ export default {
     },
     drawLoop() {
       requestAnimationFrame(this.drawLoop);
-      this.overlayCC.clearRect(0, 0, this.vidWidth, this.vidHeight);
 
       let axis = {};
+
+      this.overlayCC.clearRect(0, 0, this.vidWidth, this.vidHeight);
+      var positions = ctrack.getCurrentPosition(); // 顔部品の現在位置の取得
+      var parameters = ctrack.getCurrentParameters(); // ★現在の顔のパラメータを取得
+      var emotion = classifier.meanPredict(parameters); // ★そのパラメータから感情を推定して emotion に結果を入れる
+      axis.emotion = emotion;
+      console.log(emotion);
 
       if (ctrack.getCurrentPosition() && this.isTracking) {
         let event = ctrack.getCurrentPosition();

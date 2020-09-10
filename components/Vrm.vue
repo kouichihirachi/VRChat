@@ -190,6 +190,25 @@ export default {
         this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
 
         if (this.isAnimate) this.Animate();
+        if (axis.emotion) {
+          const emotion = axis.emotion;
+          this.currentVrm.blendShapeProxy.setValue(
+            VRMSchema.BlendShapePresetName.Fun,
+            emotion.happy * 2
+          );
+          this.currentVrm.blendShapeProxy.setValue(
+            VRMSchema.BlendShapePresetName.Sorrow,
+            emotion.sad
+          );
+          this.currentVrm.blendShapeProxy.setValue(
+            VRMSchema.BlendShapePresetName.Angry,
+            emotion.angry
+          );
+          this.currentVrm.blendShapeProxy.setValue(
+            VRMSchema.BlendShapePresetName.Joy,
+            emotion.surprised
+          );
+        }
         const blinkVal =
           Math.sin((this.clock.elapsedTime * 1) / 3) ** 1024 +
           Math.sin((this.clock.elapsedTime * 4) / 7) ** 1024;
