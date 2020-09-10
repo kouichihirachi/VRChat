@@ -47,6 +47,7 @@
   background: rgba(255, 255, 255, 0.5);
   border: double 6px #58ffff44;
   box-shadow: 8px 15px 40px #1a251a65 inset;
+  scroll-behavior:auto;
   /*font-size: 2vw;*/
 }
 
