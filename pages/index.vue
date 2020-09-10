@@ -9,7 +9,7 @@
               <span>V</span>会議
             </h1>
             <p class="text-muted">Make Your Conference More Fun!</p>
-          </div>
+          </div class="text-explain">
           <hr />V会議はあなたがバーチャルアバターで
           <br />会議に参加できる新しいWeb会議システム
           <hr />
@@ -37,32 +37,37 @@
 </template>
 <style>
 .Mainbox {
-  margin: auto;
-  margin-top: 5em;
+  position:absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform : translate(-50%,-50%);
+  transform : translate(-50%,-50%);
+  width: 25rem;
   text-align: center;
-  width: 70%;
-  max-width: 500px;
-  padding: 20px 50px;
-  border-radius: 10px;
+  padding: 1.5rem 2rem;
   background: rgba(255, 255, 255, 0.5);
   border: double 6px #58ffff44;
+  border-radius: 10px;
   box-shadow: 8px 15px 40px #1a251a65 inset;
-  /*font-size: 2vw;*/
 }
-
 .text-center h1 {
-  /*font-size: 8vw;*/
+  font-size: 3rem;
   text-shadow: 6px 3px 5px silver;
   font-family: "Yu Mincho";
   font-weight: bold;
 }
 .text-center span {
-  /*font-size: 14vw;*/
+  font-size: 5.5rem;
   font-family: "BIZ UDP明朝";
   font-weight: Bold;
   font-style: italic;
 }
-
+.text-muted{
+  font-size: 1.1rem;
+}
+.text-explain{
+  font-size: 1.6rem; 
+}
 .background {
   position: relative;
   height: 100vh;
