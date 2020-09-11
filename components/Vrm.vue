@@ -225,16 +225,16 @@ export default {
         if (axis.emotion != undefined) {
           this.currentVrm.blendShapeProxy.setValue(
             VRMSchema.BlendShapePresetName.Fun,
-            axis.emotion[5].value
+            axis.emotion[5].value * 2
           );
 
           this.currentVrm.blendShapeProxy.setValue(
             VRMSchema.BlendShapePresetName.Sorrow,
-            axis.emotion[3].value
+            axis.emotion[3].value * 2
           );
           this.currentVrm.blendShapeProxy.setValue(
             VRMSchema.BlendShapePresetName.Angry,
-            axis.emotion[0].value
+            axis.emotion[0].value * 2
           );
         }
         this.currentVrm.update(deltaTime);

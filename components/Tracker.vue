@@ -6,7 +6,7 @@
         <source src="~assets/test.mp4" />
       </video>
       <canvas ref="cameraOverlay" id="cameraOverlay" width="240" height="180"></canvas>
-      <!-- {{volume}} -->
+      {{emotions}}
     </div>
   </div>
 </template>
@@ -63,7 +63,8 @@ export default {
       center_x,
       center_y,
       center_z,
-      isCameraEnable;
+      isCameraEnable,
+      emotions;
     return {
       render,
       tracker,
@@ -83,6 +84,7 @@ export default {
       center_y,
       center_z,
       isCameraEnable,
+      emotions,
     };
   },
   async mounted() {
@@ -159,11 +161,13 @@ export default {
           axis = this.limiter(axis);
           axis = this.getMovingAverage(axis);
         }
-
+      }
+      if (CurrentPosition) {
         //表情認識
         var parameters = ctrack.getCurrentParameters(); // ★現在の顔のパラメータを取得
         var emotion = classifier.meanPredict(parameters); // ★そのパラメータから感情を推定して emotion に結果を入れる
         axis.emotion = emotion ? emotion : undefined;
+        this.emotions = axis.emotion;
       }
 
       //口の動き
