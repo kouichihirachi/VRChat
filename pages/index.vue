@@ -9,9 +9,11 @@
               <span>V</span>会議
             </h1>
             <p class="text-muted">Make Your Conference More Fun!</p>
-          </div class="text-explain">
-          <hr />V会議はあなたがバーチャルアバターで
-          <br />会議に参加できる新しいWeb会議システム
+          </div>
+          <div class="text-explain">
+            <hr />V会議はあなたがバーチャルアバターで
+            <br />会議に参加できる新しいWeb会議システム
+          </div>
           <hr />
           <div class="form-group mb-2">
             <label for="roomId">RoomID</label>
@@ -37,11 +39,11 @@
 </template>
 <style>
 .Mainbox {
-  position:absolute;
+  position: absolute;
   top: 50%;
   left: 50%;
-  -webkit-transform : translate(-50%,-50%);
-  transform : translate(-50%,-50%);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   width: 25rem;
   text-align: center;
   padding: 1.5rem 2rem;
@@ -62,11 +64,11 @@
   font-weight: Bold;
   font-style: italic;
 }
-.text-muted{
+.text-muted {
   font-size: 1.1rem;
 }
-.text-explain{
-  font-size: 1.6rem; 
+.text-explain {
+  font-size: 1.6rem;
 }
 .background {
   position: relative;
