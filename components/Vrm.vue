@@ -223,18 +223,19 @@ export default {
           ).rotation.z = axis.z;
         }
         if (axis.emotion != undefined) {
+          console.log(axis.emotion);
           this.currentVrm.blendShapeProxy.setValue(
             VRMSchema.BlendShapePresetName.Fun,
-            axis.emotion[5].value * 2
+            axis.emotion[5].value * 100
           );
 
           this.currentVrm.blendShapeProxy.setValue(
             VRMSchema.BlendShapePresetName.Sorrow,
-            axis.emotion[3].value * 2
+            axis.emotion[3].value * 100
           );
           this.currentVrm.blendShapeProxy.setValue(
             VRMSchema.BlendShapePresetName.Angry,
-            axis.emotion[0].value * 2
+            axis.emotion[0].value * 100
           );
         }
         this.currentVrm.update(deltaTime);

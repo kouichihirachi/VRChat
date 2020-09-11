@@ -6,7 +6,7 @@
         <source src="~assets/test.mp4" />
       </video>
       <canvas ref="cameraOverlay" id="cameraOverlay" width="240" height="180"></canvas>
-      {{emotions}}
+      <!-- {{emotions}} -->
     </div>
   </div>
 </template>
