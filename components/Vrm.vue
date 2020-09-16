@@ -208,8 +208,26 @@ export default {
         const deltaTime = this.clock.getDelta();
         this.currentVrm.blendShapeProxy.setValue(
           VRMSchema.BlendShapePresetName.A,
-          axis.volume
+          axis.volume * Math.random()
         );
+        this.currentVrm.blendShapeProxy.setValue(
+          VRMSchema.BlendShapePresetName.I,
+          axis.volume * Math.random()
+        );
+        /*
+        this.currentVrm.blendShapeProxy.setValue(
+          VRMSchema.BlendShapePresetName.U,
+          axis.volume * Math.random()
+        );
+        this.currentVrm.blendShapeProxy.setValue(
+          VRMSchema.BlendShapePresetName.E,
+          axis.volume * Math.random()
+        );
+        this.currentVrm.blendShapeProxy.setValue(
+          VRMSchema.BlendShapePresetName.O,
+          axis.volume * Math.random()
+        );
+        */
         if (axis.x && axis.y && axis.z) {
           // ボーンをセットs
           this.currentVrm.humanoid.getBoneNode(
@@ -225,17 +243,18 @@ export default {
         if (axis.emotion != undefined) {
           console.log(axis.emotion);
           this.currentVrm.blendShapeProxy.setValue(
-            VRMSchema.BlendShapePresetName.Fun,
-            axis.emotion[5].value * 100
+            VRMSchema.BlendShapePresetName.Joy,
+            axis.emotion[5].value
           );
 
           this.currentVrm.blendShapeProxy.setValue(
             VRMSchema.BlendShapePresetName.Sorrow,
-            axis.emotion[3].value * 100
+            axis.emotion[3].value
           );
+
           this.currentVrm.blendShapeProxy.setValue(
             VRMSchema.BlendShapePresetName.Angry,
-            axis.emotion[0].value * 100
+            axis.emotion[0].value
           );
         }
         this.currentVrm.update(deltaTime);
