@@ -11,8 +11,9 @@
             <p class="text-muted">Make Your Conference More Fun!</p>
           </div>
           <div class="text-explain">
-            <hr />V会議はあなたがバーチャルアバターで
-            <br />会議に参加できる新しいWeb会議システム
+            <hr />V会議は
+            <br />バーチャルアバターで会議に参加できる
+            <br />新しいWeb会議システム
           </div>
           <hr />
           <div class="form-group mb-2">
@@ -44,13 +45,15 @@
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  width: 25rem;
+  width: 30rem;
   text-align: center;
-  padding: 1.5rem 2rem;
+  padding: 1.5rem 4rem;
   background: rgba(255, 255, 255, 0.5);
   border: double 6px #58ffff44;
   border-radius: 10px;
   box-shadow: 8px 15px 40px #1a251a65 inset;
+  height: 30em;
+  overflow-y: scroll;
 }
 .text-center h1 {
   font-size: 3rem;
@@ -68,7 +71,7 @@
   font-size: 1.1rem;
 }
 .text-explain {
-  font-size: 1.6rem;
+  font-size: 1.0rem;
 }
 .background {
   position: relative;
