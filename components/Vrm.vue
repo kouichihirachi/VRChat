@@ -246,7 +246,7 @@ export default {
             VRMSchema.BlendShapePresetName.Joy,
             axis.emotion[5].value
           );
-
+          /*
           this.currentVrm.blendShapeProxy.setValue(
             VRMSchema.BlendShapePresetName.Sorrow,
             axis.emotion[3].value
@@ -256,6 +256,7 @@ export default {
             VRMSchema.BlendShapePresetName.Angry,
             axis.emotion[0].value
           );
+          */
         }
         this.currentVrm.update(deltaTime);
       }
