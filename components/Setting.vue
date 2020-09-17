@@ -15,11 +15,12 @@
               class="form-control"
             >
               <option disabled>選択してください</option>
-              <option value="JK.vrm" selected="selected">JK</option>
+              <option value="re-ya.vrm" selected="selected">れいやちゃん</option>
+              <option value="JK.vrm" selected="selected">女子高生</option>
               <option value="sabaru.vrm">サーバルちゃん</option>
-              <option value="a.vrm">猫</option>
-              <option value="b.vrm">城禿君</option>
-              <option value="c.vrm">城禿君</option>
+              <option value="neko.vrm">猫</option>
+              <option value="shirohage.vrm">城禿君</option>
+              <option value="shark.vrm">サメ君</option>
             </select>
           </div>
           <div class="form-group">
@@ -49,7 +50,6 @@
   </div>
 </template>
 <script>
-
 export default {
   data() {
     return {
@@ -78,7 +78,6 @@ export default {
 };
 </script>
 <style>
-
 #overlay {
   position: fixed;
   left: 0;
@@ -102,9 +101,9 @@ export default {
   border-radius: 8px;
   background-color: #fff;
   border-radius: 10px;
-  background:rgba(255,255,255,0.5);
+  background: rgba(255, 255, 255, 0.5);
   border: double 6px #58ffff44;
   box-shadow: 8px 15px 40px #1a251a65 inset;
-  font-size:2vw;
+  font-size: 2vw;
 }
 </style>
