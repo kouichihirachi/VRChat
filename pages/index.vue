@@ -52,8 +52,8 @@
   border: double 6px #58ffff44;
   border-radius: 10px;
   box-shadow: 8px 15px 40px #1a251a65 inset;
-  height: 30em;
-  overflow-y: scroll;
+  height: 35em;
+  overflow-y:  scroll;
 }
 .text-center h1 {
   font-size: 3rem;
