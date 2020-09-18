@@ -21,6 +21,9 @@
               <option value="neko.vrm">猫</option>
               <option value="shirohage.vrm">城禿君</option>
               <option value="shark.vrm">サメ君</option>
+              <option value="reiwa_rei.vrm">令和の令</option>
+              <option value="reiwa_wa.vrm">令和の和</option>
+              <option value="mazyco.vrm">魔剤子</option>
             </select>
           </div>
           <div class="form-group">
