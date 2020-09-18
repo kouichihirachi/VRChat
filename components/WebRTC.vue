@@ -1,6 +1,6 @@
 <template>
   <div id="webrtc">
-    <div class="row" id="remoteStream">
+    <div class="row" id="remoteStream" >
       <Video
         v-for="(stream,key) in remoteStreams"
         autoplay

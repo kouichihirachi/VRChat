@@ -26,7 +26,7 @@
             <div class="jumbotron mt-3 pt-3 pb-3 bg-light">
               <button @click="changeTracking" class="btn btn-success mr-1">
                 <font-awesome-icon v-if="isTracking" icon="stop" />
-                <font-awesome-icon v-if="!isTracking" icon="play" />
+                <font-awesome-icon v-if="!isTracking" icon="video" />
               </button>
               <button @click="toggleConnect" class="btn btn-info">{{isConnected?"切断":"接続"}}</button>
               <button class="btn btn-dark" @click="openSetting">
@@ -34,7 +34,7 @@
               </button>
               <button @click="toggleMute" class="btn btn-info">
                 <font-awesome-icon v-if="isMuted" icon="volume-up" />
-                <font-awesome-icon v-if="!isMuted" icon="volume-off" />
+                <font-awesome-icon v-if="!isMuted" icon="volume-mute" />
               </button>
               <button @click="mirror" class="btn btn-info">
                 <font-awesome-icon icon="desktop" />
@@ -43,12 +43,12 @@
                 <font-awesome-icon icon="desktop" />
               </button>
               <button @click="initializePosition" class="btn btn-danger">
-                <font-awesome-icon icon="desktop" />
+                <font-awesome-icon icon="undo-alt" />
               </button>
             </div>
           </div>
         </div>
-        <div class="col-6 pt-3">
+        <div class="col-6 pt-3 migizume">
           <WebRTC ref="WebRTC" :localStream="localStream" :audioTrack="audioTrack" />
         </div>
       </div>
@@ -68,6 +68,10 @@
   z-index: 0;
   overflow: hidden;
 }
+/*.migizume{
+  align:"right";
+
+}*/
 .background::before {
   content: "";
   background: inherit;
@@ -171,4 +175,5 @@ export default {
     },
   },
 };
+
 </script>
