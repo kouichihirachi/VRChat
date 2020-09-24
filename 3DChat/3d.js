@@ -3,58 +3,58 @@ let centerValue = 0.9;//顔が正面のときのxDeg値
 let yParam = 1.6;//中央のときのatan2の値
 
 /*
-　描画で使う各種関数
+ 描画で使う各種関数
 */
-let middle_x=0;
-let center_x=0;
-let center_y=0;
-let center_z=0;
+let middle_x = 0;
+let center_x = 0;
+let center_y = 0;
+let center_z = 0;
 let body_x = 218;
 let body_y = 198;
 
 
-let pre_i=0;
+let pre_i = 0;
 
-function setting(){
+function setting() {
   let positions = ctrack.getCurrentPosition();
   //alert(positions[1][1]);
   Initial_Tilit(positions);
-  return ;
+  return;
 }
 
 
 //初期の傾きの設定
 function Initial_Tilit(event) {
-  
+
   /*for (var i = 0; i < POS.length; ++i) {
     dot(90, 90, 'gray');
   }*/
-    let centerValue = 0.9;//顔が正面のときのxDeg値
-    //let yParam = 1.6;//中央のときのatan2の値 
+  let centerValue = 0.9;//顔が正面のときのxDeg値
+  //let yParam = 1.6;//中央のときのatan2の値 
 
-    // X軸方向の傾き
+  // X軸方向の傾き
   let tops = ((event[0][1] + event[14][1]) / 2);
   let bottoms = ((event[6][1] + event[8][1]) / 2);
   let middle = bottoms + ((tops - bottoms) / 2);
-  let x =(centerValue - (event[37][1] / middle)) / 0.2 * Math.PI / 2;
-  center_x=Math.round(x* 10) / 10;
+  let x = (centerValue - (event[37][1] / middle)) / 0.2 * Math.PI / 2;
+  center_x = Math.round(x * 10) / 10;
   // Y軸方向の傾き
-    //center_y = Math.atan2(event[33][1] - event[7][1], event[33][0] - event[7][0]) ;
-    //center_y=-Math.atan((event[33][0]-((event[25][0]+event[30][0])/2))/((event[14][0]-event[0][0])/2))*4;
+  //center_y = Math.atan2(event[33][1] - event[7][1], event[33][0] - event[7][0]) ;
+  //center_y=-Math.atan((event[33][0]-((event[25][0]+event[30][0])/2))/((event[14][0]-event[0][0])/2))*4;
   //Z軸方向の傾き
-    //center_z=Math.PI / 2 - Math.atan2(event[62][1] - event[33][1], event[62][0] - event[33][0]);
+  //center_z=Math.PI / 2 - Math.atan2(event[62][1] - event[33][1], event[62][0] - event[33][0]);
 
-    //body_x = event[62][0];
-    //body_y = event[62][1];
+  //body_x = event[62][0];
+  //body_y = event[62][1];
   alert(stack[0].x);
   return x;
 }
 
 
 
-let fter=40;
-let bigin_x=230;
-let bigin_y=200;
+let fter = 40;
+let bigin_x = 230;
+let bigin_y = 200;
 
 
 
@@ -64,28 +64,15 @@ function mapEventTo3dTransforms(event) {
   //let safter=20;
 
   if (event) {
-<<<<<<< HEAD
-    let scale=Math.sqrt(Math.pow((event[33][0]-event[62][0]),2)+Math.pow((event[33][1]-event[62][1]),2));
-    let scaler=Math.sqrt(Math.pow((event[62][0]-bigin_x),2)+Math.pow((event[62][1]-bigin_y),2));
+    let scale = Math.sqrt(Math.pow((event[33][0] - event[62][0]), 2) + Math.pow((event[33][1] - event[62][1]), 2));
+    let scaler = Math.sqrt(Math.pow((event[62][0] - bigin_x), 2) + Math.pow((event[62][1] - bigin_y), 2));
 
-    if((90>=scaler)&&(Math.abs(scale)<=(fter+0.7))) {
+    if ((90 >= scaler) && (Math.abs(scale) <= (fter + 0.7))) {
 
-      fter=scale;
-      bigin_x=event[62][0];
-      bigin_y=event[62][1];
+      fter = scale;
+      bigin_x = event[62][0];
+      bigin_y = event[62][1];
       //safter=scaler;
-=======
-    // X軸方向の傾き
-    let tops = ((event[0][1] + event[14][1]) / 2);
-    let bottoms = ((event[6][1] + event[8][1]) / 2);
-    let middle = bottoms + ((tops - bottoms) / 2);
-    let xDeg = (centerValue - (event[37][1] / middle)) / 0.2 * Math.PI / 2;
-    //console.log(xDeg);
-
-    // Y軸方向の傾き
-    var t2 = event[62], t1 = [(event[13][0] - event[1][0]) / 2, (event[13][1] - event[1][1]) / 2];
-    var yDeg = (Math.atan2(event[33][1] - event[7][1], event[33][0] - event[7][0]) + yParam) / 0.1 * Math.PI / 6;
->>>>>>> a0ca9048b7cb474b4a95d1ca440012430a0cd07e
 
       // X軸方向の傾き
       let tops = ((event[0][1] + event[14][1]) / 2);
@@ -93,11 +80,11 @@ function mapEventTo3dTransforms(event) {
       let middle = bottoms + ((tops - bottoms) / 2);
       let centerValue = 0.9;//顔が正面のときのxDeg値
 
-     // if(middle_x==0){
-        let xDeg = ((centerValue - (event[37][1] / middle)) / 0.2 * Math.PI / 2)-center_x;
+      // if(middle_x==0){
+      let xDeg = ((centerValue - (event[37][1] / middle)) / 0.2 * Math.PI / 2) - center_x;
       //}
-     /// else{
-        //let xDeg = ((middle-middle_x)*(centerValue-event[37][1]-center_x)/(0.2*middle*midle_x))*Math*PI;
+      /// else{
+      //let xDeg = ((middle-middle_x)*(centerValue-event[37][1]-center_x)/(0.2*middle*midle_x))*Math*PI;
       //}
       //alert(middle);
       //console.log(xDeg);
@@ -107,12 +94,12 @@ function mapEventTo3dTransforms(event) {
       //let yParam = 1.55;//中央のときのatan2の値
       //var yDeg = ((Math.atan2(event[33][1] - event[7][1], event[33][0] - event[7][0]) + yParam) / 0.1 * Math.PI / 6)-center_y;
 
-      let yDeg=-Math.atan((event[33][0]-((event[25][0]+event[30][0])/2))/((event[14][0]-event[0][0])/2))*4;
+      let yDeg = -Math.atan((event[33][0] - ((event[25][0] + event[30][0]) / 2)) / ((event[14][0] - event[0][0]) / 2)) * 4;
 
       // Z軸方向の傾き
       //let zDeg = (Math.PI / 2 - Math.atan2(event[62][1] - event[33][1], event[62][0] - event[33][0]))-center_z;
 
-      let zDeg = Math.atan((event[27][1]-event[33][1])/(event[32][0]-event[27][0]))*1.5-center_z;
+      let zDeg = Math.atan((event[27][1] - event[33][1]) / (event[32][0] - event[27][0])) * 1.5 - center_z;
 
       //pre_i=0;
 
@@ -122,9 +109,9 @@ function mapEventTo3dTransforms(event) {
         z: zDeg
       };
 
-    } 
+    }
     else {
-      fter=40;  
+      fter = 40;
       //bigin_x=(230+bigin_x)/2;
       //bigin_y=(200+bigin_y)/2;
     }
@@ -151,9 +138,9 @@ function mapEventTo3dTransforms(event) {
 }
 
 
-function get_body_deg(event){
-  if(event){
-    
+function get_body_deg(event) {
+  if (event) {
+
     /*let tops_x = ((event[0][0] + event[14][0]) / 2);
     let bottoms_x = ((event[6][0] + event[8][0]) / 2);
     let middle_x = bottoms_x + ((tops_x - bottoms_x) / 2);
@@ -161,14 +148,14 @@ function get_body_deg(event){
     let bottoms_y = ((event[6][1] + event[8][1]) / 2);
     let middle_y = bottoms_y + ((tops_y - bottoms_y) / 2);
     let deg=Math.PI/2 + Math.atan2(middle_y-198,middle_x-218);*/
-    
+
     //let aa=2;
     //let deg=Math.PI/2 + Math.atan2((event[62][1]+198)/2,event[62][0]-218);
-    let deg=Math.PI/2 + Math.atan2(event[62][1]-body_y,event[62][0]-body_x);
-    if(event[7][1]>290) deg=deg/5;
+    let deg = Math.PI / 2 + Math.atan2(event[62][1] - body_y, event[62][0] - body_x);
+    if (event[7][1] > 290) deg = deg / 5;
     //else  let deg=0;
     //alert(event[7][1]);
-    return -deg/4.5;
+    return -deg / 4.5;
     //let deg=(Math.PI / 2 - Math.atan2(event[62][1] - event[33][1], event[62][0] - event[33][0]))/2;
     /*if(Math.abs(event[62][0]-230)>20){
       let deg=(Math.PI / 2 - Math.atan2(event[62][1] - event[33][1], event[62][0] - event[33][0]))/2;
@@ -187,9 +174,9 @@ function get_body_deg(event){
   }
 
 }
-function body_deg_limitter(body_deg){
-  if(body_deg>0.3) body_deg = 0.3;
-  else  if(body_deg<-0.3) body_deg = -0.3;
+function body_deg_limitter(body_deg) {
+  if (body_deg > 0.3) body_deg = 0.3;
+  else if (body_deg < -0.3) body_deg = -0.3;
   return body_deg;
 }
 
@@ -234,23 +221,23 @@ function limiter(axis) {
 function getMovingAverage(axis) {
   //5回分の移動平均を取り，なめらかにする
 
- this.stack = [];
+  this.stack = [];
   averageAxis = { x: 0, y: 0, z: 0 };
-  let a=20;
+  let a = 20;
   if (stack.length > a) {
     stack.shift();
     stack.push(axis);
-    
-    let limit_x=Math.abs(stack[a-2].x-stack[a-3].x);
-    let limit_y=Math.abs(stack[a-2].y-stack[a-3].y);
-    let limit_z=Math.abs(stack[a-2].z-stack[a-3].z);
 
-    let difference_x=Math.abs(stack[a-1].x-stack[a-2].x);
-    let difference_y=Math.abs(stack[a-1].y-stack[a-2].y);
-    let difference_z=Math.abs(stack[a-1].z-stack[a-2].z);
-    stack[a-1].x=move_limit(limit_x,difference_x,stack[a-1].x,stack[a-2].x);
-    stack[a-1].y=move_limit(limit_y,difference_y,stack[a-1].y,stack[a-2].y);
-    stack[a-1].z=move_limit(limit_z,difference_z,stack[a-1].z,stack[a-2].z);
+    let limit_x = Math.abs(stack[a - 2].x - stack[a - 3].x);
+    let limit_y = Math.abs(stack[a - 2].y - stack[a - 3].y);
+    let limit_z = Math.abs(stack[a - 2].z - stack[a - 3].z);
+
+    let difference_x = Math.abs(stack[a - 1].x - stack[a - 2].x);
+    let difference_y = Math.abs(stack[a - 1].y - stack[a - 2].y);
+    let difference_z = Math.abs(stack[a - 1].z - stack[a - 2].z);
+    stack[a - 1].x = move_limit(limit_x, difference_x, stack[a - 1].x, stack[a - 2].x);
+    stack[a - 1].y = move_limit(limit_y, difference_y, stack[a - 1].y, stack[a - 2].y);
+    stack[a - 1].z = move_limit(limit_z, difference_z, stack[a - 1].z, stack[a - 2].z);
 
     for (let i = 0; i < stack.length; i++) {
       averageAxis.x += stack[i].x;
@@ -280,18 +267,17 @@ function maximumLimiter(axis) {
   return axis;
 }
 
-<<<<<<< HEAD
-function move_limit(limit,difference,after,before) {
-  if((difference<(limit*2))||(diffirence>0.001)) after=before;
+function move_limit(limit, difference, after, before) {
+  if ((difference < (limit * 2)) || (diffirence > 0.001)) after = before;
   else {//if(difference>limit){
-    if(after>before)  after = before + limit;
-    else  after = before - limit;
+    if (after > before) after = before + limit;
+    else after = before - limit;
   }
   return after;
 }
-hans=-1.3;
+hans = -1.3;
 
-function hans_up(){
+function hans_up() {
   alert(hans);
   return -hans;
 }
@@ -299,7 +285,7 @@ function hans_up(){
 //破棄
 function deg_limit(deg) {
   this.astack = [];
-  averageAxis=0;
+  averageAxis = 0;
   if (astack.length > 20) {
     for (let i = 0; i < astack.length; i++) {
       averageAxis += astack[i];
@@ -312,34 +298,34 @@ function deg_limit(deg) {
   }
 }
 
-/*
-function  prediction(){
-  this.difference=[];
-  if (pre_i==0) {
-    for(let i=0;i<(stack.length-1);i++){
-      difference.push(stack[i+1]-stack[i]);
+
+function prediction() {
+  this.difference = [];
+  if (pre_i == 0) {
+    for (let i = 0; i < (stack.length - 1); i++) {
+      difference.push(stack[i + 1] - stack[i]);
     }
-    pre_i+=1;
+    pre_i += 1;
     //近似直線を求める
-    xline=rough_line(difference.x);
-    yline=rough_line(difference.y);
-    zline=rough_line(difference.z);
+    xline = rough_line(difference.x);
+    yline = rough_line(difference.y);
+    zline = rough_line(difference.z);
   }
   //求めた近似曲線から次の点を求める
-  let x_eg=xline.a*pre_i+xline.b;
-  let y_eg=yline.a*pre_i+yline.b;
-  let z_eg=zline.a*pre_i+zline.b;
+  let x_eg = xline.a * pre_i + xline.b;
+  let y_eg = yline.a * pre_i + yline.b;
+  let z_eg = zline.a * pre_i + zline.b;
   return {
-    x:x_eg,
-    y:y_eg,
-    z:z_eg
+    x: x_eg,
+    y: y_eg,
+    z: z_eg
   }
 }
 
-function rough_line(x){
-  let katamuki,seppen;
+function rough_line(x) {
+  let katamuki, seppen;
   let sum_xy = 0, sum_x = 0, sum_y = 0, sum_x2 = 0;
-  for (let i=0; i<x.length; i++) {
+  for (let i = 0; i < x.length; i++) {
     sum_xy += x[i] * i;
     sum_x += x[i];
     sum_y += i;
@@ -351,7 +337,7 @@ function rough_line(x){
     a: katamuki,
     b: seppen
   }
-}*/
+}
 
 
 /*
@@ -396,21 +382,3 @@ Animate(){
     currentVrm.update(deltaTime);
   }
 },*/
-=======
-//初期の傾き
-function Initial_Tilit(event) {
-  if (event) {
-    // X軸方向の傾き
-    let tops = ((event[0][1] + event[14][1]) / 2);
-    let bottoms = ((event[6][1] + event[8][1]) / 2);
-    let middle = bottoms + ((tops - bottoms) / 2);
-    centerValue = (centerValue - (event[37][1] / middle)) / 0.2 * Math.PI / 2;
-    //console.log(xDeg);
-
-    // Y軸方向の傾き
-    yParam  = Math.atan2(event[33][1] - event[7][1], event[33][0] - event[7][0]) ;
-
-    return ;
-  }
-}
->>>>>>> a0ca9048b7cb474b4a95d1ca440012430a0cd07e

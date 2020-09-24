@@ -111,77 +111,47 @@ export default {
       const modelSrc = "/models/" + modelName; // 利用するモデルの配置場所
       const loader = new GLTFLoader();
       loader.crossOrigin = "anonymous";
-      loader.load(modelSrc, (gltf) => {
-        VRM.from(gltf).then((vrm) => {
-          this.status = "";
-          VRMUtils.removeUnnecessaryJoints(gltf.scene);
-          if (this.scene != null) {
-            this.scene.add(vrm.scene);
-          }
-          this.currentVrm = vrm;
-          vrm.scene.rotation.y = Math.PI;
-          vrm.humanoid.getBoneNode(
-            VRMSchema.HumanoidBoneName.RightUpperArm
-          ).rotation.z = -(Math.PI / 2 - 0.3);
-          vrm.humanoid.getBoneNode(
-            VRMSchema.HumanoidBoneName.LeftUpperArm
-          ).rotation.z = Math.PI / 2 - 0.3;
-          vrm.humanoid.getBoneNode(
-            VRMSchema.HumanoidBoneName.LeftHand
-          ).rotation.z = 0.1;
-          vrm.humanoid.getBoneNode(
-            VRMSchema.HumanoidBoneName.RightHand
-          ).rotation.z = -0.1;
+      loader.load(
+        modelSrc,
+        (gltf) => {
+          VRM.from(gltf).then((vrm) => {
+            this.status = "";
+            VRMUtils.removeUnnecessaryJoints(gltf.scene);
+            if (this.scene != null) {
+              this.scene.add(vrm.scene);
+            }
+            this.currentVrm = vrm;
+            vrm.scene.rotation.y = Math.PI;
+            vrm.humanoid.getBoneNode(
+              VRMSchema.HumanoidBoneName.RightUpperArm
+            ).rotation.z = -(Math.PI / 2 - 0.3);
+            vrm.humanoid.getBoneNode(
+              VRMSchema.HumanoidBoneName.LeftUpperArm
+            ).rotation.z = Math.PI / 2 - 0.3;
+            vrm.humanoid.getBoneNode(
+              VRMSchema.HumanoidBoneName.LeftHand
+            ).rotation.z = 0.1;
+            vrm.humanoid.getBoneNode(
+              VRMSchema.HumanoidBoneName.RightHand
+            ).rotation.z = -0.1;
 
-          // keyframe animations
-          const bones = [VRMSchema.HumanoidBoneName.Neck].map((boneName) => {
-            return vrm.humanoid.getBoneNode(boneName);
+            // keyframe animations
+            const bones = [VRMSchema.HumanoidBoneName.Neck].map((boneName) => {
+              return vrm.humanoid.getBoneNode(boneName);
+            });
+            //console.log(bones);
+            this.$emit("finishLoading");
           });
-          //console.log(bones);
-          this.$emit("finishLoading");
-        });
-      });
+        },
+        (progress) =>
+          console.log(
+            "モデルを読み込んでいます...",
+            100.0 * (progress.loaded / progress.total),
+            "%"
+          ),
+        (error) => console.error(error)
+      );
       this.renderer.render(this.scene, this.camera);
-    },
-    Animate() {
-      console.log("Called");
-      this.isAnimate = true;
-      let finished = true;
-      if (this.currentVrm) {
-        const deltaTime = this.clock.getDelta();
-        const Animation = [
-          {
-            Bone: this.currentVrm.humanoid.getBoneNode(
-              VRMSchema.HumanoidBoneName.LeftUpperArm
-            ).rotation.x,
-            Deg: Math.PI / 2,
-          },
-          {
-            Bone: this.currentVrm.humanoid.getBoneNode(
-              VRMSchema.HumanoidBoneName.LeftLowerArm
-            ).rotation.y,
-            Deg: Math.PI / 2,
-          },
-        ];
-        for (let i = 0; i < Animation.length; i++) {
-          const target = Animation[i].Deg;
-          const Bone = Animation[i].Bone;
-          const now = Bone;
-          const diff = target - now;
-          //console.log(diff);
-          if (diff > 0) {
-            finished = false;
-            this.currentVrm.humanoid.getBoneNode(
-              VRMSchema.HumanoidBoneName.LeftUpperArm
-            ).rotation.x = this.clock.elapsedTime * 0.8;
-            this.currentVrm.humanoid.getBoneNode(
-              VRMSchema.HumanoidBoneName.LeftLowerArm
-            ).rotation.y = -this.clock.elapsedTime * 0.8;
-          }
-        }
-        if (finished) this.isAnimate = false;
-        this.currentVrm.update(deltaTime);
-      }
     },
     ChangeVrm(axis) {
       //瞬き
@@ -239,9 +209,12 @@ export default {
           this.currentVrm.humanoid.getBoneNode(
             VRMSchema.HumanoidBoneName.Neck
           ).rotation.z = axis.z;
+          this.currentVrm.humanoid.getBoneNode(
+            VRMSchema.HumanoidBoneName.Spine
+          ).rotation.z = axis.body_deg;
         }
         if (axis.emotion != undefined) {
-          console.log(axis.emotion);
+          // console.log(axis.emotion);
           this.currentVrm.blendShapeProxy.setValue(
             VRMSchema.BlendShapePresetName.Joy,
             axis.emotion[5].value

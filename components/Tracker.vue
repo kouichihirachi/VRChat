@@ -157,9 +157,11 @@ export default {
           this.center_z != null
         ) {
           axis = this.mapEventTo3dTransforms(event);
-          axis = this.maximumLimiter(axis);
-          axis = this.limiter(axis);
-          axis = this.getMovingAverage(axis);
+          axis = this.maximumLimiter(axis); //動く範囲の制限
+          axis = this.limiter(axis); //外れ値を除く
+          axis = this.getMovingAverage(axis); //移動平均
+          axis.body_deg = this.get_body_deg(event);
+          axis.body_deg = this.body_deg_limitter(axis.body_deg);
         }
       }
       if (CurrentPosition) {
@@ -194,6 +196,17 @@ export default {
     stopTracking() {
       if (this.isTracking) {
         this.isTracking = false;
+      }
+    },
+    get_body_deg(event) {
+      const body_x = 218;
+      const body_y = 198;
+      if (event) {
+        let deg =
+          Math.PI / 2 +
+          Math.atan2(event[62][1] - body_y, event[62][0] - body_x);
+        if (event[7][1] > 290) deg = deg / 5;
+        return -deg / 4.5;
       }
     },
     //初期設定:コメントアウト後で外す
@@ -331,13 +344,61 @@ export default {
         z: z,
       };
     },
+    body_deg_limitter(body_deg) {
+      if (body_deg > 0.3) body_deg = 0.3;
+      else if (body_deg < -0.3) body_deg = -0.3;
+      return body_deg;
+    },
+    move_limit(limit, difference, after, before) {
+      if (difference < limit * 2 || diffirence > 0.001) after = before;
+      else {
+        //if(difference>limit){
+        if (after > before) after = before + limit;
+        else after = before - limit;
+      }
+      return after;
+    },
     getMovingAverage(axis) {
       //5回分の移動平均を取り，なめらかにする
       let averageAxis = { x: 0, y: 0, z: 0 };
+      // console.log(this.stack.length);
+      const k = 5;
+      if (this.stack.length > k) {
+        // this.stack.shift();
+        // this.stack.push(axis);
 
-      if (this.stack.length > 5) {
-        this.stack.shift();
-        this.stack.push(axis);
+        const limit_x = Math.abs(this.stack[k - 2].x - this.stack[k - 3].x);
+        const limit_y = Math.abs(this.stack[k - 2].y - this.stack[k - 3].y);
+        const limit_z = Math.abs(this.stack[k - 2].z - this.stack[k - 3].z);
+
+        const difference_x = Math.abs(
+          this.stack[k - 1].x - this.stack[k - 2].x
+        );
+        const difference_y = Math.abs(
+          this.stack[k - 1].y - this.stack[k - 2].y
+        );
+        const difference_z = Math.abs(
+          this.stack[k - 1].z - this.stack[k - 2].z
+        );
+        this.stack[k - 1].x = this.move_limit(
+          limit_x,
+          difference_x,
+          this.stack[k - 1].x,
+          this.stack[k - 2].x
+        );
+        this.stack[k - 1].y = this.move_limit(
+          limit_y,
+          difference_y,
+          this.stack[k - 1].y,
+          this.stack[k - 2].y
+        );
+        this.stack[k - 1].z = this.move_limit(
+          limit_z,
+          difference_z,
+          this.stack[k - 1].z,
+          this.stack[k - 2].z
+        );
+
         for (let i = 0; i < this.stack.length; i++) {
           averageAxis.x += this.stack[i].x;
           averageAxis.y += this.stack[i].y;
@@ -347,7 +408,7 @@ export default {
         averageAxis.y /= this.stack.length;
         averageAxis.z /= this.stack.length;
         this.stack.pop();
-        this.stack.push(averageAxis);
+        this.stack.push(axis);
         return averageAxis;
       } else {
         this.stack.push(axis);
@@ -355,7 +416,7 @@ export default {
       }
     },
     maximumLimiter(axis) {
-      const limit = (45 / 180) * Math.PI;
+      const limit = (70 / 180) * Math.PI;
       if (axis.x > limit) axis.x = limit;
       if (axis.y > limit / 2) axis.y = limit / 2;
       if (axis.z > limit) axis.z = limit;
