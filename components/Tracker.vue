@@ -2,10 +2,23 @@
   <div id="Tracker">
     <!-- カメラ表示 -->
     <div id="container">
-      <video id="camera" ref="camera" width="240" height="180" loop playsinline autoplay>
-        <source src="~assets/test.mp4" />
+      <video
+        id="camera"
+        ref="camera"
+        width="240"
+        height="180"
+        loop
+        playsinline
+        autoplay
+      >
+        <!-- <source src="~assets/test.mp4" /> -->
       </video>
-      <canvas ref="cameraOverlay" id="cameraOverlay" width="240" height="180"></canvas>
+      <canvas
+        ref="cameraOverlay"
+        id="cameraOverlay"
+        width="240"
+        height="180"
+      ></canvas>
       <!-- {{emotions}} -->
     </div>
   </div>
